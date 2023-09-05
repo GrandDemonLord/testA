@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/assets-safety-application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-application/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-domain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-infrastructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-infrastructure/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-interface/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-interface/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-start/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets-safety-start/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

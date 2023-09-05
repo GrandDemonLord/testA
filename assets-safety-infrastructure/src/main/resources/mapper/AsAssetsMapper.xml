@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunyu.assets.safety.infrastructure.dao.assets.AsAssetsMapper">
+    <sql id="Base_Column_List">
+        id,asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+        os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
+        owning_unit_name,owning_network,physical_address,network_address,domain_name,
+        management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
+        baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
+        other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
+        approve_status,asset_status,reason_of_delist,
+        description,create_by,create_time,update_by,update_time,status
+    </sql>
+
+    <sql id="Assets_List_Search">
+        status = 0
+        <if test="assetName != null and assetName !=''">
+            and asset_name like concat (#{assetName}, '%')
+        </if>
+        <if test="assetTypeId != null and assetTypeId !=''">
+            and asset_type_id = #{assetTypeId}
+        </if>
+        <if test="startTime != null and startTime !=''">
+            and create_time <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and create_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="createBy != null and createBy !=''">
+            and create_by = #{createBy}
+        </if>
+    </sql>
+
+    <select id="listingList" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets
+        <where>
+            <choose>
+                <when test="ids != null and ids.size>0">
+                    id in
+                    <foreach collection="ids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </when>
+                <otherwise>
+                    <include refid="Assets_List_Search"/>
+                </otherwise>
+            </choose>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="saveListing" parameterType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into as_assets (asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+                               os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
+                               owning_unit_name,owning_network,physical_address,network_address,domain_name,
+                               management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
+                               baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
+                               other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
+                               approve_status,asset_status,reason_of_delist,
+                               description,create_by,create_time,update_by,update_time,status)
+        values (#{assetName}, #{assetTypeId}, #{assetTypeName}, #{assetLevelId}, #{assetLevelName},
+                #{osVersion}, #{environmentComponents}, #{dbVersion}, #{systemNameAndVersion}, #{owningUnitId},
+                #{owningUnitName}, #{owningNetwork}, #{physicalAddress}, #{networkAddress}, #{domainName},
+                #{managementUnitId}, #{managementUnitName}, #{responsiblePerson}, #{contactInformation}, #{penetrationTestReportId}, #{penetrationTestReportName},
+                #{baselineCheckReportId}, #{baselineCheckReportName}, #{vulnerabilityScanReportId}, #{vulnerabilityScanReportName}, #{otherReportsId},
+                #{otherReportsName}, #{typeOfOperation}, #{approveUserId}, #{approveUserName}, #{approveTime},
+                #{approveStatus}, #{assetStatus}, #{reasonOfDelist},
+                #{description}, #{createBy}, now(), #{createBy}, now(), #{status})
+    </insert>
+
+    <update id="saveListingReapply" parameterType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        update as_assets
+        set
+        asset_name = #{assetName}, asset_type_id = #{assetTypeId}, asset_type_name = #{assetTypeName}, asset_level_id = #{assetLevelId}, asset_level_name = #{assetLevelName},
+        os_version = #{osVersion}, environment_components = #{environmentComponents}, db_version = #{dbVersion}, system_name_and_version = #{systemNameAndVersion}, owning_unit_id = #{owningUnitId},
+        owning_unit_name = #{owningUnitName}, owning_network = #{owningNetwork}, physical_address = #{physicalAddress}, network_address = #{networkAddress}, domain_name = #{domainName},
+        management_unit_id = #{managementUnitId}, management_unit_name = #{managementUnitName}, responsible_person = #{responsiblePerson}, contact_information = #{contactInformation}, penetration_test_report_id = #{penetrationTestReportId}, penetration_test_report_name = #{penetrationTestReportName},
+        baseline_check_report_id = #{baselineCheckReportId}, baseline_check_report_name = #{baselineCheckReportName}, vulnerability_scan_report_id = #{vulnerabilityScanReportId}, vulnerability_scan_report_name = #{vulnerabilityScanReportName}, other_reports_id = #{otherReportsId},
+        other_reports_name = #{otherReportsName},
+        approve_user_id = '',
+        approve_user_name = '',
+        approve_time = null,
+        approve_status = #{approveStatus},
+        update_by = #{updateBy},
+        update_time = now()
+        <where>
+            id = ${id}
+        </where>
+    </update>
+
+    <insert id="batchListing" parameterType="java.util.List">
+        insert into as_assets (asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+        os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
+        owning_unit_name,owning_network,physical_address,network_address,domain_name,
+        management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
+        baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
+        other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
+        approve_status,asset_status,reason_of_delist,
+        description,create_by,create_time,update_by,update_time,status)
+        values
+        <foreach collection="list" item="asAssetsPo" separator=",">
+            (#{asAssetsPo.assetName}, #{asAssetsPo.assetTypeId}, #{asAssetsPo.assetTypeName}, #{asAssetsPo.assetLevelId}, #{asAssetsPo.assetLevelName},
+            #{asAssetsPo.osVersion}, #{asAssetsPo.environmentComponents}, #{asAssetsPo.dbVersion}, #{asAssetsPo.systemNameAndVersion}, #{asAssetsPo.owningUnitId},
+            #{asAssetsPo.owningUnitName}, #{asAssetsPo.owningNetwork}, #{asAssetsPo.physicalAddress}, #{asAssetsPo.networkAddress}, #{asAssetsPo.domainName},
+            #{asAssetsPo.managementUnitId}, #{asAssetsPo.managementUnitName}, #{asAssetsPo.responsiblePerson}, #{asAssetsPo.contactInformation},
+            #{asAssetsPo.penetrationTestReportId}, #{asAssetsPo.penetrationTestReportName},
+            #{asAssetsPo.baselineCheckReportId}, #{asAssetsPo.baselineCheckReportName}, #{asAssetsPo.vulnerabilityScanReportId},
+            #{asAssetsPo.vulnerabilityScanReportName}, #{asAssetsPo.otherReportsId},
+            #{asAssetsPo.otherReportsName}, #{asAssetsPo.typeOfOperation}, #{asAssetsPo.approveUserId}, #{asAssetsPo.approveUserName}, #{asAssetsPo.approveTime},
+            #{asAssetsPo.approveStatus}, #{asAssetsPo.assetStatus}, #{asAssetsPo.reasonOfDelist},
+            #{asAssetsPo.description}, #{asAssetsPo.createBy}, now(), #{asAssetsPo.createBy}, now(), #{asAssetsPo.status})
+        </foreach>
+    </insert>
+
+    <select id="delistList" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets
+        <where>
+            <choose>
+                <when test="ids != null and ids.size>0">
+                    id in
+                    <foreach collection="ids" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </when>
+                <otherwise>
+                    <include refid="Assets_List_Search"/>
+                    and asset_status in('valid','inValid')
+                </otherwise>
+            </choose>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="getAsAssetsById" resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets where id = #{id} and status = 0
+    </select>
+
+    <update id="delist" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo">
+        update as_assets
+        set update_by = #{updateBy},
+        <if test="reasonOfDelist != null and reasonOfDelist !=''">
+            reason_of_delist = #{reasonOfDelist},
+        </if>
+        <if test="typeOfOperation != null and typeOfOperation !=''">
+            type_of_operation = #{typeOfOperation},
+        </if>
+        <if test="approveStatus != null and approveStatus !=''">
+            approve_status = #{approveStatus},
+        </if>
+        update_time = now()
+        <where>
+            id = ${id}
+        </where>
+    </update>
+
+    <update id="delistReapply" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo">
+        update as_assets
+        set
+        reason_of_delist = #{reasonOfDelist},
+        approve_user_id = '',
+        approve_user_name = '',
+        approve_time = null,
+        approve_status = #{approveStatus},
+        update_by = #{updateBy},
+        update_time = now()
+        <where>
+            id = ${id}
+        </where>
+    </update>
+
+    <select id="pendingList" resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets
+        <where>
+            status = 0
+            <if test="approveStatus != null and approveStatus !=''">
+                and approve_status = #{approveStatus}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <update id="deleteById">
+        update as_assets
+        set status    = #{status},
+            update_by = #{userId}
+        where id = #{id}
+    </update>
+
+    <update id="approved" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
+        update as_assets
+        set approve_status    = #{approveStatus},
+            asset_status      = #{assetStatus},
+            approve_user_id   = #{approveUserId},
+            approve_user_name = #{approveUserName},
+            approve_time      =now()
+        where id = #{id}
+    </update>
+
+    <update id="rejection" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
+        update as_assets
+        set approve_status    = #{approveStatus},
+            asset_status      = #{assetStatus},
+            approve_user_id   = #{approveUserId},
+            approve_user_name = #{approveUserName},
+            approve_time      =now()
+        where id = #{id}
+    </update>
+
+    <select id="rejectionList" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets
+        <where>
+            <include refid="Assets_List_Search"/>
+            <if test="approveStatus != null and approveStatus !=''">
+                and approve_status = #{approveStatus}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="masterList" resultType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
+        select
+        <include refid="Base_Column_List"/>
+        from as_assets
+        <where>
+            <include refid="Assets_List_Search"/>
+        </where>
+        order by create_time desc
+    </select>
+
+</mapper>
