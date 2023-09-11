@@ -63,7 +63,7 @@ public class AssetsDomain {
     public AsAssetsDo listing(AsAssetsDo asAssetsDo) {
         asAssetsDo.setStatus(ModelStatusEnum.VAILD.getCode());
         asAssetsDo.setTypeOfOperation(AssetsOptTypeEnum.LISTING.getCode());
-        asAssetsDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+        asAssetsDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
         return iAsAssetsRepository.listing(asAssetsDo);
     }
 
@@ -81,8 +81,8 @@ public class AssetsDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "资产不存在。");
         }
         if (!ObjectUtils.isEmpty(asAssetsDoExist.getApproveStatus())
-                && ApproveStatusEnum.REJECTION.getCode().equals(asAssetsDoExist.getApproveStatus())) {
-            asAssetsDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+                && ApproveStatusEnum.SOURCEREJECTION.getCode().equals(asAssetsDoExist.getApproveStatus())) {
+            asAssetsDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
             return iAsAssetsRepository.listingReapply(asAssetsDo);
         }
         throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "只能操作审批驳回的资产。");
@@ -92,7 +92,7 @@ public class AssetsDomain {
         for (AsAssetsDo asAssetsDo : asAssetsDos) {
             asAssetsDo.setStatus(ModelStatusEnum.VAILD.getCode());
             asAssetsDo.setTypeOfOperation(AssetsOptTypeEnum.LISTING.getCode());
-            asAssetsDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+            asAssetsDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
             asAssetsDo.setCreateBy(userId);
         }
         return iAsAssetsRepository.batchListing(asAssetsDos);
@@ -131,7 +131,7 @@ public class AssetsDomain {
         if (!ObjectUtils.isEmpty(asAssetsDoExist.getAssetStatus())
                 && AssetsStatusEnum.VALID.getCode().equals(asAssetsDoExist.getAssetStatus())) {
             asAssetsDo.setTypeOfOperation(AssetsOptTypeEnum.DELIST.getCode());
-            asAssetsDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+            asAssetsDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
             return iAsAssetsRepository.delist(asAssetsDo);
         }
         throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "只能下架使用中的资产。");
@@ -149,8 +149,8 @@ public class AssetsDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "资产不存在。");
         }
         if (!ObjectUtils.isEmpty(asAssetsDoExist.getApproveStatus())
-                && ApproveStatusEnum.REJECTION.getCode().equals(asAssetsDoExist.getApproveStatus())) {
-            asAssetsDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+                && ApproveStatusEnum.SOURCEREJECTION.getCode().equals(asAssetsDoExist.getApproveStatus())) {
+            asAssetsDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
             return iAsAssetsRepository.delistReapply(asAssetsDo);
         }
         throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "只能操作审批驳回的资产。");
@@ -168,7 +168,7 @@ public class AssetsDomain {
      */
     public PageInfo<AsAssetsDo> pendingList(AsAssetsSearchDo assetsSearchDo, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        assetsSearchDo.setApproveStatus(ApproveStatusEnum.PENDING.getCode());
+        assetsSearchDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
         List<AsAssetsDo> asAssetsDos = iAsAssetsRepository.pendingList(assetsSearchDo);
         if (CollectionUtils.isEmpty(asAssetsDos)) {
             return null;
@@ -210,11 +210,11 @@ public class AssetsDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "资产不存在。");
         }
         // 只有待审批的数据才可进行此操作，防止数据被恶意篡改
-        if (asAssetsDoExist.getApproveStatus().equals(ApproveStatusEnum.PENDING.getCode())) {
+        if (asAssetsDoExist.getApproveStatus().equals(ApproveStatusEnum.SOURCEPENDING.getCode())) {
             String assetStatus = getAssetStatus(asAssetsDoExist);
             return iAsAssetsRepository.approved(AsAssetsApproveBuilder.builder()
                     .id(id)
-                    .approveStatus(ApproveStatusEnum.APPROVED.getCode())
+                    .approveStatus(ApproveStatusEnum.SOURCEAPPROVED.getCode())
                     .assetStatus(assetStatus)
                     .approveUserId(userId)
                     .approveUserName(userName)
@@ -250,10 +250,10 @@ public class AssetsDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "资产不存在。");
         }
         // 只有待审批的数据才可进行此操作，防止数据被恶意篡改
-        if (asAssetsDoExist.getApproveStatus().equals(ApproveStatusEnum.PENDING.getCode())) {
+        if (asAssetsDoExist.getApproveStatus().equals(ApproveStatusEnum.SOURCEPENDING.getCode())) {
             return iAsAssetsRepository.rejection(AsAssetsApproveBuilder.builder()
                     .id(id)
-                    .approveStatus(ApproveStatusEnum.REJECTION.getCode())
+                    .approveStatus(ApproveStatusEnum.SOURCEREJECTION.getCode())
                     .approveUserId(userId)
                     .approveUserName(userName)
                     .build());
@@ -273,7 +273,7 @@ public class AssetsDomain {
      */
     public PageInfo<AsAssetsDo> rejectionList(AsAssetsSearchDo assetsSearchDo, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        assetsSearchDo.setApproveStatus(ApproveStatusEnum.REJECTION.getCode());
+        assetsSearchDo.setApproveStatus(ApproveStatusEnum.SOURCEREJECTION.getCode());
         List<AsAssetsDo> asAssetsDos = iAsAssetsRepository.rejectionList(assetsSearchDo);
         if (CollectionUtils.isEmpty(asAssetsDos)) {
             return null;
