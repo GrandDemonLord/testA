@@ -16,7 +16,7 @@ public enum ApproveStatusEnum {
     SOURCEREJECTION("source_rejection", "审批驳回"),
 
     WORKORDERPENDING("workOrder_pending", "待审批"),
-    WORKORAPPROVED("workOrder_approved", "审批通过"),
+    WORKORDERAPPROVED("workOrder_approved", "审批通过"),
     WORKORDERREJECTION("workOrder_rejection", "审批驳回");
 
     private String code;
