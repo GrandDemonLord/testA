@@ -30,11 +30,11 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>${pageHelper-spring-boot.version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>com.kunyu</groupId>
             <artifactId>mvc-interceptor</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>com.kunyu</groupId>
             <artifactId>common</artifactId>
