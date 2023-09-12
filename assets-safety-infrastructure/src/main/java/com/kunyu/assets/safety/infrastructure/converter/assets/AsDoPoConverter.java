@@ -12,14 +12,14 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
-* @description
+* 资产 Do Po 互转
 *
 * @author yangliu
 * @date 2023-08-28
 */
 @Mapper
-public interface DoPoConverter {
-    DoPoConverter INSTANCE = Mappers.getMapper(DoPoConverter.class);
+public interface AsDoPoConverter {
+    AsDoPoConverter INSTANCE = Mappers.getMapper(AsDoPoConverter.class);
 
     AsAssetsPo getAsAssetsPo(AsAssetsDo asAssetsDo);
 

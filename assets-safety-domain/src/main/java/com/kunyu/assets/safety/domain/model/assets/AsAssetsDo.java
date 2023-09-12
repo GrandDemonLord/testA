@@ -27,6 +27,21 @@ public class AsAssetsDo extends BaseModel {
     private Integer id;
 
     /**
+     * 表单类型code
+     */
+    private String formdataTypeCode;
+
+    /**
+     * 表单类型name
+     */
+    private String formdataTypeName;
+
+    /**
+     * 表单模块
+     */
+    private String formdataModule;
+
+    /**
      * 资产名称
      */
     @ExcelProperty("资产名称")
@@ -183,11 +198,6 @@ public class AsAssetsDo extends BaseModel {
      */
     @ExcelProperty("其他报告")
     private String otherReportsName;
-
-    /**
-     * 操作类型，listing：上架申请、delist：下架申请
-     */
-    private String typeOfOperation;
 
     /**
      * 审批人账号

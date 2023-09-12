@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunyu.assets.safety.infrastructure.dao.safework.SwTaskWorkOrderAssetsMapper">
+
+    <sql id="Base_Column_List">
+        id,base_id,asset_id,
+        create_by,create_time,update_by,update_time,status
+    </sql>
+
+    <insert id="addTaskWorkOrderAssets" parameterType="java.util.List">
+        insert into sw_task_work_order_assets (base_id,asset_id,
+        create_by,create_time,update_by,update_time,status)
+        values
+        <foreach collection="list" item="assetsPo" separator=",">
+            (
+            #{assetsPo.baseId},
+            #{assetsPo.assetId},
+            #{assetsPo.createBy},
+            now(),
+            #{assetsPo.createBy},
+            now(),
+            #{assetsPo.status}
+            )
+        </foreach>
+    </insert>
+
+    <update id="deleteTaskWorkOrderAssetsByBaseId">
+        update sw_task_work_order_assets
+        set status    = #{status},
+            update_by = #{userId}
+        where base_id = #{baseId} and status = 0
+    </update>
+
+</mapper>

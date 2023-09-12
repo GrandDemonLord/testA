@@ -8,7 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.kunyu.assets.safety.application.assets.AssetsApplication;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo;
-import com.kunyu.assets.safety.interfaces.converter.assets.DtoDoConverter;
+import com.kunyu.assets.safety.interfaces.converter.assets.AsDtoDoConverter;
 import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsDto;
 import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsImportDto;
 import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsSearchDto;
@@ -55,7 +55,7 @@ public class AssetsApplyController {
         if (pageSize > 200) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
         }
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         assetsSearchDo.setCreateBy(userId);
         return ApiResponse.success(assetsApplication.listingList(assetsSearchDo, pageNum, pageSize));
@@ -69,7 +69,7 @@ public class AssetsApplyController {
      */
     @RequestMapping(value = "/listing", method = RequestMethod.POST)
     public ApiResponse<AsAssetsDo> listing(@Validated(AsAssetsListingValid.class) @RequestBody AsAssetsDto asAssetsDto) {
-        AsAssetsDo asAssetsDo = DtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
+        AsAssetsDo asAssetsDo = AsDtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
         // todo 从ThreadLocalUtil内拿
         asAssetsDo.setCreateBy(userId);
         return ApiResponse.success(assetsApplication.listing(asAssetsDo));
@@ -83,12 +83,12 @@ public class AssetsApplyController {
      * @author yangliu
      * @date 2023/9/5
      */
-    @RequestMapping(value = "/listingReapply", method = RequestMethod.POST)
+    @RequestMapping(value = "/listingReapply", method = RequestMethod.PUT)
     public ApiResponse<AsAssetsDo> listingReapply(@Validated(AsAssetsListingValid.class) @RequestBody AsAssetsDto asAssetsDto) {
         if (ObjectUtils.isEmpty(asAssetsDto.getId())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "id不能为空。");
         }
-        AsAssetsDo asAssetsDo = DtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
+        AsAssetsDo asAssetsDo = AsDtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
         // todo 从ThreadLocalUtil内拿
         asAssetsDo.setUpdateBy(userId);
         return ApiResponse.success(assetsApplication.listingReapply(asAssetsDo));
@@ -102,7 +102,7 @@ public class AssetsApplyController {
      */
     @RequestMapping(value = "/batchListing", method = RequestMethod.POST)
     public ApiResponse<List<AsAssetsDo>> batchListing(@Validated(AsAssetsListingValid.class) @RequestBody ValidList<AsAssetsImportDto> importDtos) {
-        List<AsAssetsDo> asAssetsDos = DtoDoConverter.INSTANCE.getAsAssetsDos(importDtos);
+        List<AsAssetsDo> asAssetsDos = AsDtoDoConverter.INSTANCE.getAsAssetsDos(importDtos);
         return ApiResponse.success(assetsApplication.batchListing(asAssetsDos, userId));
     }
 
@@ -121,7 +121,7 @@ public class AssetsApplyController {
         if (pageSize > 200) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
         }
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         assetsSearchDo.setCreateBy(userId);
         return ApiResponse.success(assetsApplication.delistList(assetsSearchDo, pageNum, pageSize));
@@ -135,7 +135,7 @@ public class AssetsApplyController {
      */
     @RequestMapping(value = "/delist", method = RequestMethod.POST)
     public ApiResponse<Boolean> delist(@Validated(AsAssetsDelistValid.class) @RequestBody AsAssetsDto asAssetsDto) {
-        AsAssetsDo asAssetsDo = DtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
+        AsAssetsDo asAssetsDo = AsDtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
         // todo 从ThreadLocalUtil内拿
         asAssetsDo.setUpdateBy(userId);
         return ApiResponse.success(assetsApplication.delist(asAssetsDo));
@@ -147,9 +147,9 @@ public class AssetsApplyController {
      * @param asAssetsDto asAssetsDto
      * @return Boolean Boolean
      */
-    @RequestMapping(value = "/delistReapply", method = RequestMethod.POST)
+    @RequestMapping(value = "/delistReapply", method = RequestMethod.PUT)
     public ApiResponse<Boolean> delistReapply(@Validated(AsAssetsDelistValid.class) @RequestBody AsAssetsDto asAssetsDto) {
-        AsAssetsDo asAssetsDo = DtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
+        AsAssetsDo asAssetsDo = AsDtoDoConverter.INSTANCE.getAsAssetsDo(asAssetsDto);
         // todo 从ThreadLocalUtil内拿
         asAssetsDo.setUpdateBy(userId);
         return ApiResponse.success(assetsApplication.delistReapply(asAssetsDo));
@@ -172,7 +172,7 @@ public class AssetsApplyController {
         if (pageSize > 200) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
         }
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         assetsSearchDo.setCreateBy(userId);
         return ApiResponse.success(assetsApplication.rejectionList(assetsSearchDo, pageNum, pageSize));
@@ -186,7 +186,7 @@ public class AssetsApplyController {
      * @author yangliu
      * @date 2023/8/30
      */
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public ApiResponse<Boolean> deleteById(@PathVariable Integer id) {
         // todo 从ThreadLocalUtil内拿
         return ApiResponse.success(assetsApplication.deleteById(id, userId));

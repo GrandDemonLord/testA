@@ -64,7 +64,7 @@ public class ImportController {
                 throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "导入数据不能为空。");
             }
         } catch (IOException ex) {
-            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "系统异常，请联系系统管理员。");
+            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "操作失败，请联系系统管理员。");
         }
         return ApiResponse.success(importDtos);
     }

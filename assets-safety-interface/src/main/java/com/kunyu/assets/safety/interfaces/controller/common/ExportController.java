@@ -12,7 +12,7 @@ import com.kunyu.assets.safety.application.assets.AssetsApplication;
 import com.kunyu.assets.safety.application.assets.AssetsReportFormsApplication;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo;
-import com.kunyu.assets.safety.interfaces.converter.assets.DtoDoConverter;
+import com.kunyu.assets.safety.interfaces.converter.assets.AsDtoDoConverter;
 import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsSearchDto;
 import com.kunyu.common.exception.PlatformException;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +68,7 @@ public class ExportController {
     public void listingList(@RequestBody AsAssetsSearchDto assetsSearchDto, HttpServletResponse response) {
         log.info("export start");
         // 这里复用资产上架清单查询接口
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         assetsSearchDo.setCreateBy(userId);
         PageInfo<AsAssetsDo> pageInfo = assetsApplication.listingList(assetsSearchDo, pageNum, pageSize);
@@ -89,7 +89,7 @@ public class ExportController {
     public void delistList(@RequestBody AsAssetsSearchDto assetsSearchDto, HttpServletResponse response) {
         log.info("export start");
         // 这里复用资产下架清单查询接口
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         assetsSearchDo.setCreateBy(userId);
         PageInfo<AsAssetsDo> pageInfo = assetsApplication.delistList(assetsSearchDo, pageNum, pageSize);
@@ -110,7 +110,7 @@ public class ExportController {
     public void masterList(@RequestBody AsAssetsSearchDto assetsSearchDto, HttpServletResponse response) {
         log.info("export start");
         // 这里复用资产总清单查询接口
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         // todo 判断权限和数据范围 总厂和分厂都可以看到数据
         assetsSearchDo.setUserId(userId);

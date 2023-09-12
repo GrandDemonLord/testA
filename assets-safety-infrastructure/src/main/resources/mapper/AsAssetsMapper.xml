@@ -4,15 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kunyu.assets.safety.infrastructure.dao.assets.AsAssetsMapper">
     <sql id="Base_Column_List">
-        id,asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+        id,formdata_type_code,formdata_type_name,formdata_module,asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
         os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
         owning_unit_name,owning_network,physical_address,network_address,domain_name,
         management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
         baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
-        other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
-        approve_status,asset_status,reason_of_delist,
-        description,create_by,create_time,update_by,update_time,status
+        other_reports_name,reason_of_delist,approve_user_id,approve_user_name,approve_time,
+        approve_status,asset_status,
+        unit_id,unit_name,dept_id,dept_name,create_by,create_time,update_by,update_time,status
     </sql>
+
+    <insert id="saveListing" parameterType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into as_assets (formdata_type_code,formdata_type_name,formdata_module,asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+                               os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
+                               owning_unit_name,owning_network,physical_address,network_address,domain_name,
+                               management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
+                               baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
+                               other_reports_name,reason_of_delist,approve_user_id,approve_user_name,approve_time,
+                               approve_status,asset_status,
+                               unit_id, unit_name, dept_id, dept_name,create_by,create_time,update_by,update_time,status)
+        values (#{formdataTypeCode},#{formdataTypeName},#{formdataModule},#{assetName}, #{assetTypeId}, #{assetTypeName}, #{assetLevelId}, #{assetLevelName},
+                #{osVersion}, #{environmentComponents}, #{dbVersion}, #{systemNameAndVersion}, #{owningUnitId},
+                #{owningUnitName}, #{owningNetwork}, #{physicalAddress}, #{networkAddress}, #{domainName},
+                #{managementUnitId}, #{managementUnitName}, #{responsiblePerson}, #{contactInformation}, #{penetrationTestReportId}, #{penetrationTestReportName},
+                #{baselineCheckReportId}, #{baselineCheckReportName}, #{vulnerabilityScanReportId}, #{vulnerabilityScanReportName}, #{otherReportsId},
+                #{otherReportsName}, #{reasonOfDelist}, #{approveUserId}, #{approveUserName}, #{approveTime},
+                #{approveStatus}, #{assetStatus},
+                #{unitId}, #{unitName}, #{deptId}, #{deptName}, #{createBy}, now(), #{createBy}, now(), #{status})
+    </insert>
 
     <sql id="Assets_List_Search">
         status = 0
@@ -54,26 +74,6 @@
         order by create_time desc
     </select>
 
-    <insert id="saveListing" parameterType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo"
-            useGeneratedKeys="true" keyProperty="id">
-        insert into as_assets (asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
-                               os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
-                               owning_unit_name,owning_network,physical_address,network_address,domain_name,
-                               management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
-                               baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
-                               other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
-                               approve_status,asset_status,reason_of_delist,
-                               description,create_by,create_time,update_by,update_time,status)
-        values (#{assetName}, #{assetTypeId}, #{assetTypeName}, #{assetLevelId}, #{assetLevelName},
-                #{osVersion}, #{environmentComponents}, #{dbVersion}, #{systemNameAndVersion}, #{owningUnitId},
-                #{owningUnitName}, #{owningNetwork}, #{physicalAddress}, #{networkAddress}, #{domainName},
-                #{managementUnitId}, #{managementUnitName}, #{responsiblePerson}, #{contactInformation}, #{penetrationTestReportId}, #{penetrationTestReportName},
-                #{baselineCheckReportId}, #{baselineCheckReportName}, #{vulnerabilityScanReportId}, #{vulnerabilityScanReportName}, #{otherReportsId},
-                #{otherReportsName}, #{typeOfOperation}, #{approveUserId}, #{approveUserName}, #{approveTime},
-                #{approveStatus}, #{assetStatus}, #{reasonOfDelist},
-                #{description}, #{createBy}, now(), #{createBy}, now(), #{status})
-    </insert>
-
     <update id="saveListingReapply" parameterType="com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo">
         update as_assets
         set
@@ -90,31 +90,31 @@
         update_by = #{updateBy},
         update_time = now()
         <where>
-            id = ${id}
+            id = ${id} and status = 0
         </where>
     </update>
 
     <insert id="batchListing" parameterType="java.util.List">
-        insert into as_assets (asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
+        insert into as_assets (formdata_type_code,formdata_type_name,formdata_module,asset_name,asset_type_id,asset_type_name,asset_level_id,asset_level_name,
         os_version,environment_components,db_version,system_name_and_version,owning_unit_id,
         owning_unit_name,owning_network,physical_address,network_address,domain_name,
         management_unit_id,management_unit_name,responsible_person,contact_information,penetration_test_report_id,penetration_test_report_name,
         baseline_check_report_id,baseline_check_report_name,vulnerability_scan_report_id,vulnerability_scan_report_name,other_reports_id,
-        other_reports_name,type_of_operation,approve_user_id,approve_user_name,approve_time,
-        approve_status,asset_status,reason_of_delist,
-        description,create_by,create_time,update_by,update_time,status)
+        other_reports_name,reason_of_delist,approve_user_id,approve_user_name,approve_time,
+        approve_status,asset_status,
+        unit_id, unit_name, dept_id, dept_name,create_by,create_time,update_by,update_time,status)
         values
         <foreach collection="list" item="asAssetsPo" separator=",">
-            (#{asAssetsPo.assetName}, #{asAssetsPo.assetTypeId}, #{asAssetsPo.assetTypeName}, #{asAssetsPo.assetLevelId}, #{asAssetsPo.assetLevelName},
+            (#{asAssetsPo.formdataTypeCode},#{asAssetsPo.formdataTypeName},#{asAssetsPo.formdataModule},#{asAssetsPo.assetName}, #{asAssetsPo.assetTypeId}, #{asAssetsPo.assetTypeName}, #{asAssetsPo.assetLevelId}, #{asAssetsPo.assetLevelName},
             #{asAssetsPo.osVersion}, #{asAssetsPo.environmentComponents}, #{asAssetsPo.dbVersion}, #{asAssetsPo.systemNameAndVersion}, #{asAssetsPo.owningUnitId},
             #{asAssetsPo.owningUnitName}, #{asAssetsPo.owningNetwork}, #{asAssetsPo.physicalAddress}, #{asAssetsPo.networkAddress}, #{asAssetsPo.domainName},
             #{asAssetsPo.managementUnitId}, #{asAssetsPo.managementUnitName}, #{asAssetsPo.responsiblePerson}, #{asAssetsPo.contactInformation},
             #{asAssetsPo.penetrationTestReportId}, #{asAssetsPo.penetrationTestReportName},
             #{asAssetsPo.baselineCheckReportId}, #{asAssetsPo.baselineCheckReportName}, #{asAssetsPo.vulnerabilityScanReportId},
             #{asAssetsPo.vulnerabilityScanReportName}, #{asAssetsPo.otherReportsId},
-            #{asAssetsPo.otherReportsName}, #{asAssetsPo.typeOfOperation}, #{asAssetsPo.approveUserId}, #{asAssetsPo.approveUserName}, #{asAssetsPo.approveTime},
-            #{asAssetsPo.approveStatus}, #{asAssetsPo.assetStatus}, #{asAssetsPo.reasonOfDelist},
-            #{asAssetsPo.description}, #{asAssetsPo.createBy}, now(), #{asAssetsPo.createBy}, now(), #{asAssetsPo.status})
+            #{asAssetsPo.otherReportsName}, #{asAssetsPo.reasonOfDelist}, #{asAssetsPo.approveUserId}, #{asAssetsPo.approveUserName}, #{asAssetsPo.approveTime},
+            #{asAssetsPo.approveStatus}, #{asAssetsPo.assetStatus}, ,
+            #{asAssetsPo.unitId}, #{asAssetsPo.unitName}, #{asAssetsPo.deptId}, #{asAssetsPo.deptName}, #{asAssetsPo.createBy}, now(), #{asAssetsPo.createBy}, now(), #{asAssetsPo.status})
         </foreach>
     </insert>
 
@@ -152,15 +152,15 @@
         <if test="reasonOfDelist != null and reasonOfDelist !=''">
             reason_of_delist = #{reasonOfDelist},
         </if>
-        <if test="typeOfOperation != null and typeOfOperation !=''">
-            type_of_operation = #{typeOfOperation},
+        <if test="formdataTypeCode != null and formdataTypeCode !=''">
+            formdata_type_code = #{formdataTypeCode},
         </if>
         <if test="approveStatus != null and approveStatus !=''">
             approve_status = #{approveStatus},
         </if>
         update_time = now()
         <where>
-            id = ${id}
+            id = ${id} and status = 0
         </where>
     </update>
 
@@ -175,7 +175,7 @@
         update_by = #{updateBy},
         update_time = now()
         <where>
-            id = ${id}
+            id = ${id} and status = 0
         </where>
     </update>
 
@@ -196,7 +196,7 @@
         update as_assets
         set status    = #{status},
             update_by = #{userId}
-        where id = #{id}
+        where id = #{id} and status = 0
     </update>
 
     <update id="approved" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
@@ -206,7 +206,7 @@
             approve_user_id   = #{approveUserId},
             approve_user_name = #{approveUserName},
             approve_time      =now()
-        where id = #{id}
+        where id = #{id} and status = 0
     </update>
 
     <update id="rejection" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
@@ -216,7 +216,7 @@
             approve_user_id   = #{approveUserId},
             approve_user_name = #{approveUserName},
             approve_time      =now()
-        where id = #{id}
+        where id = #{id} and status = 0
     </update>
 
     <select id="rejectionList" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo"

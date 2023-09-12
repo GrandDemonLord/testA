@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunyu.assets.safety.infrastructure.dao.safework.SwTaskTypeMapper">
+
+    <sql id="Base_Column_List">
+        id,task_type,task_illustrate,unit_id,unit_name,dept_id,dept_name,
+        create_by,create_time,update_by,update_time,status
+    </sql>
+
+    <select id="taskTypeList" parameterType="com.kunyu.assets.safety.domain.model.safework.SwTaskTypeSearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from sw_task_type
+        <where>
+            status = 0
+            <if test="taskType != null and taskType !=''">
+                and task_type like concat (#{taskType}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="addTaskType" parameterType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskTypePo"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into sw_task_type (task_type, task_illustrate, unit_id, unit_name, dept_id, dept_name,
+                                  create_by, create_time, update_by, update_time, status)
+        values (#{taskType}, #{taskIllustrate}, #{unitId}, #{unitName}, #{deptId}, #{deptName},
+                #{createBy}, now(), #{createBy}, now(), #{status})
+    </insert>
+
+    <update id="updateTaskType" parameterType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskTypePo">
+        update sw_task_type
+        set task_type = #{taskType},
+        task_illustrate = #{taskIllustrate},
+        update_by = #{updateBy},
+        update_time = now()
+        <where>
+            id = ${id} and status = 0
+        </where>
+    </update>
+
+    <update id="deleteTaskTypeById">
+        update sw_task_type
+        set status = #{status},
+        update_by = #{userId},
+        update_time = now()
+        <where>
+            id = ${id} and status = 0
+        </where>
+    </update>
+
+    <select id="getTaskTypeById" resultType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from sw_task_type
+        <where>
+            id = ${id} and status = 0
+        </where>
+    </select>
+
+</mapper>
