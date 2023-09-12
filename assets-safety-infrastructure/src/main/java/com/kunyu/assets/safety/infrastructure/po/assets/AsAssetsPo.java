@@ -23,6 +23,21 @@ public class AsAssetsPo extends BaseModel {
     private String assetName;
 
     /**
+     * 表单类型code
+     */
+    private String formdataTypeCode;
+
+    /**
+     * 表单类型name
+     */
+    private String formdataTypeName;
+
+    /**
+     * 表单模块
+     */
+    private String formdataModule;
+
+    /**
      * 资产类型id
      */
     private String assetTypeId;
@@ -151,11 +166,6 @@ public class AsAssetsPo extends BaseModel {
      * 其他报告
      */
     private String otherReportsName;
-
-    /**
-     * 操作类型，listing：上架申请、delist：下架申请
-     */
-    private String typeOfOperation;
 
     /**
      * 审批人账号

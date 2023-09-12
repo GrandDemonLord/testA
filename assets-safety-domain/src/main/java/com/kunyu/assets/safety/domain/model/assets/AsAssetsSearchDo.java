@@ -16,10 +16,7 @@ import java.util.List;
 */
 @Data
 public class AsAssetsSearchDo {
-    /**
-     * 操作类型，listing：上架、delist：下架
-     */
-    private String typeOfOperation;
+    private String formdateTypeCode;
     private String assetName;
     private String assetTypeId;
     private String startTime;

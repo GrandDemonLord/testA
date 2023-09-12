@@ -8,7 +8,7 @@ import com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo;
 import com.kunyu.assets.safety.domain.respository.assets.IAsAssetsRepository;
-import com.kunyu.assets.safety.infrastructure.converter.assets.DoPoConverter;
+import com.kunyu.assets.safety.infrastructure.converter.assets.AsDoPoConverter;
 import com.kunyu.assets.safety.infrastructure.dao.assets.AsAssetsMapper;
 import com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,12 @@ public class AsAssetsRepositoryImpl implements IAsAssetsRepository {
     @Override
     public List<AsAssetsDo> listingList(AsAssetsSearchDo assetsSearchDo) {
         List<AsAssetsPo> asAssetsPos = asAssetsMapper.listingList(assetsSearchDo);
-        return DoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
     }
 
     @Override
     public AsAssetsDo listing(AsAssetsDo asAssetsDo) {
-        AsAssetsPo asAssetsPo = DoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
+        AsAssetsPo asAssetsPo = AsDoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
         asAssetsMapper.saveListing(asAssetsPo);
         asAssetsDo.setId(asAssetsPo.getId());
         return asAssetsDo;
@@ -43,14 +43,14 @@ public class AsAssetsRepositoryImpl implements IAsAssetsRepository {
 
     @Override
     public AsAssetsDo listingReapply(AsAssetsDo asAssetsDo) {
-        AsAssetsPo asAssetsPo = DoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
+        AsAssetsPo asAssetsPo = AsDoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
         asAssetsMapper.saveListingReapply(asAssetsPo);
         return asAssetsDo;
     }
 
     @Override
     public List<AsAssetsDo> batchListing(List<AsAssetsDo> asAssetsDos) {
-        List<AsAssetsPo> asAssetsPos = DoPoConverter.INSTANCE.getAsAssetsPos(asAssetsDos);
+        List<AsAssetsPo> asAssetsPos = AsDoPoConverter.INSTANCE.getAsAssetsPos(asAssetsDos);
         asAssetsMapper.batchListing(asAssetsPos);
         return asAssetsDos;
     }
@@ -58,31 +58,31 @@ public class AsAssetsRepositoryImpl implements IAsAssetsRepository {
     @Override
     public List<AsAssetsDo> delistList(AsAssetsSearchDo assetsSearchDo) {
         List<AsAssetsPo> asAssetsPos = asAssetsMapper.delistList(assetsSearchDo);
-        return DoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
     }
 
     @Override
     public boolean delist(AsAssetsDo asAssetsDo) {
-        AsAssetsPo asAssetsPo = DoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
+        AsAssetsPo asAssetsPo = AsDoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
         return asAssetsMapper.delist(asAssetsPo) > 0 ? true : false;
     }
 
     @Override
     public boolean delistReapply(AsAssetsDo asAssetsDo) {
-        AsAssetsPo asAssetsPo = DoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
+        AsAssetsPo asAssetsPo = AsDoPoConverter.INSTANCE.getAsAssetsPo(asAssetsDo);
         return asAssetsMapper.delistReapply(asAssetsPo) > 0 ? true : false;
     }
 
     @Override
     public AsAssetsDo getAsAssetsById(Integer id) {
         AsAssetsPo asAssetsPo = asAssetsMapper.getAsAssetsById(id);
-        return DoPoConverter.INSTANCE.getAsAssetsDo(asAssetsPo);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDo(asAssetsPo);
     }
 
     @Override
     public List<AsAssetsDo> pendingList(AsAssetsSearchDo assetsSearchDo) {
         List<AsAssetsPo> asAssetsPos = asAssetsMapper.pendingList(assetsSearchDo);
-        return DoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
     }
 
     @Override
@@ -103,12 +103,12 @@ public class AsAssetsRepositoryImpl implements IAsAssetsRepository {
     @Override
     public List<AsAssetsDo> masterList(AsAssetsSearchDo assetsSearchDo) {
         List<AsAssetsPo> asAssetsPos = asAssetsMapper.masterList(assetsSearchDo);
-        return DoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
     }
 
     @Override
     public List<AsAssetsDo> rejectionList(AsAssetsSearchDo assetsSearchDo) {
         List<AsAssetsPo> asAssetsPos = asAssetsMapper.rejectionList(assetsSearchDo);
-        return DoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
+        return AsDoPoConverter.INSTANCE.getAsAssetsDos(asAssetsPos);
     }
 }

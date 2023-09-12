@@ -8,7 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.kunyu.assets.safety.application.assets.AssetsReportFormsApplication;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.assets.AsAssetsSearchDo;
-import com.kunyu.assets.safety.interfaces.converter.assets.DtoDoConverter;
+import com.kunyu.assets.safety.interfaces.converter.assets.AsDtoDoConverter;
 import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsSearchDto;
 import com.kunyu.common.exception.PlatformException;
 import com.kunyu.common.result.ApiResponse;
@@ -47,7 +47,7 @@ public class AssetsReportFormsController {
         if (pageSize > 200) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
         }
-        AsAssetsSearchDo assetsSearchDo = DtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
+        AsAssetsSearchDo assetsSearchDo = AsDtoDoConverter.INSTANCE.getAssetsSearchDo(assetsSearchDto);
         // todo 从ThreadLocalUtil内拿
         // todo 判断权限和数据范围 总厂和分厂都可以看到数据
         assetsSearchDo.setUserId(userId);
