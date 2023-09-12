@@ -27,4 +27,5 @@ public interface LoopholeDoPoConverter {
 
     List<LoLoopholeDo> getLoLoopholeDos(List<LoLoopholePo> loLoopholePos);
 
+    LoLoopholeDo getLoLoopholeDo(LoLoopholePo LoLoopholePo);
 }

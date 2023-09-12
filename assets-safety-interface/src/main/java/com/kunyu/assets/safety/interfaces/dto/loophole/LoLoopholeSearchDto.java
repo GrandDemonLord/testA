@@ -4,10 +4,9 @@
 
 package com.kunyu.assets.safety.interfaces.dto.loophole;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author poet_wei
@@ -17,20 +16,28 @@ import java.util.Date;
 @Data
 public class LoLoopholeSearchDto {
     private String name;
-    private String type;
-    private String level;
+
+    private String dataTypeCode;
+
+    private String dataTypeName;
+
+    private Integer loopholeTypeId;
+
+    private String loopholeTypeName;
+
+    private Integer loopholeLevelId;
+
+    private String loopholeLevelName;
+
     private String taskStatus;
     /**
      * 任务开始时间
      */
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date taskStartTime;
+    private LocalDate taskStartTime;
 
     /**
      * 任务结束时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private Date taskEndTime;
+    private LocalDate taskEndTime;
 
 }

@@ -51,12 +51,6 @@ public class LoopholeApplyController {
         }
         LoLoopholeSearchDo loLoopholeSearchDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeSearchDo(loopholeSearchDto);
         String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        // 校验单位是否存在
-
-        // 校验部门是否存在
-
-        // 校验部门负责人是否存在
-
         if(RoleEnum.SYSENGINEER.getRoleId().equals(roleCode) || RoleEnum.SYSUSER.getRoleId().equals(roleCode)){
             loLoopholeSearchDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
         }
@@ -101,6 +95,59 @@ public class LoopholeApplyController {
             loLoopholeSearchDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
         }
         return ApiResponse.success(loopholeApplication.selectRepairWorkOrder(loLoopholeSearchDo, pageNum, pageSize));
+    }
+
+
+    /**
+     * @description 漏洞报告开始
+     *
+     * @param id 漏洞id
+     * @return Boolean
+     * @author poet_wei
+     * @date 2023/9/12
+     */
+    @RequestMapping(path = "/loopholeReortStart/{id}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> loopholeReortStart(@PathVariable("id") Integer id) {
+        String updateBy = ThreadLocalUtil.getUserInfo().getUserId();
+        return ApiResponse.success(loopholeApplication.loopholeReortStart(id,updateBy));
+    }
+
+    /**
+     * @description 漏洞报告结束
+     *
+     * @param id 漏洞id
+     * @return Boolean
+     * @author poet_wei
+     * @date 2023/9/12
+     */
+    @RequestMapping(path = "/loopholeReortEnd/{id}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> loopholeReortEnd(@PathVariable("id") Integer id) {
+        String updateBy = ThreadLocalUtil.getUserInfo().getUserId();
+        return ApiResponse.success(loopholeApplication.loopholeReortEnd(id,updateBy));
+    }
+
+    /**
+     * @param loopholeDto
+     * @return LoLoopholeDo
+     * @description 创建被驳回修复工单--管理端
+     * @author poet_wei
+     * @date 2023/9/8
+     */
+    @RequestMapping(path = "/saveRepairOrder", method = RequestMethod.POST)
+    public ApiResponse<LoLoopholeDo> saveRepairOrder(@RequestBody LoLoopholeDto loopholeDto) {
+        checkPermissions();
+        LoLoopholeDo loLoopholeDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeDo(loopholeDto);
+        loLoopholeDo.setUpdateBy(ThreadLocalUtil.getUserInfo().getUserId());
+        return ApiResponse.success(loopholeApplication.saveRepairOrder(loLoopholeDo));
+    }
+
+    // 权限校验
+    private static String checkPermissions() {
+        String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
+        if (!RoleUtils.isAdminByCode(roleCode)) {
+            throw new PlatformException(HttpStatus.UNAUTHORIZED.value(), "非管理员不可以操作。");
+        }
+        return roleCode;
     }
 
 }
