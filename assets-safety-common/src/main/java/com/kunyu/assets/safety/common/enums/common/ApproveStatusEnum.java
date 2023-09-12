@@ -11,14 +11,20 @@ package com.kunyu.assets.safety.common.enums.common;
 * @date 2023-08-25
 */
 public enum ApproveStatusEnum {
+    /**
+     * 源数据
+     */
     SOURCEPENDING("source_pending", "待审批"),
     SOURCEAPPROVED("source_approved", "审批通过"),
     SOURCEREJECTION("source_rejection", "审批驳回"),
 
-    WORKORDERPENDING("workOrder_pending", "待审批"),
-    WORKORDERAPPROVED("workOrder_approved", "审批通过"),
-    WORKORDERREJECTION("workOrder_rejection", "审批驳回"),
-    WORKORDERPROCESSED("workOrder_processed", "待处置");
+    /**
+     * 安全工作管理 任务工单
+     */
+    SWWORKORDERPENDING("workOrder_pending", "待审批"),
+    SWWORKORDERAPPROVED("workOrder_approved", "审批通过"),
+    SWWORKORDERREJECTION("workOrder_rejection", "审批驳回"),
+    SWWORKORDERPROCESSED("workOrder_processed", "待处置");
 
     private String code;
     private String name;
