@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunyu.assets.safety.infrastructure.dao.common.ApApproveHistoryMapper">
+    <sql id="Base_Column_List">
+        id,base_id,formdata_type_code,formdata_type_name,formdata_module,instance_node,approve_user_id,
+        approve_user_name,approve_start_time,approve_end_time,approve_result,
+        status
+    </sql>
+
+    <insert id="addApproveHistory" parameterType="java.util.List">
+        insert into ap_approve_history (base_id,formdata_type_code,formdata_type_name,formdata_module,instance_node,approve_user_id,
+        approve_user_name,approve_start_time,approve_end_time,approve_result,
+        status) values
+        <foreach collection="list" item="historyPo" separator=",">
+            (#{historyPo.baseId},#{historyPo.formdataTypeCode},#{historyPo.formdataTypeName},#{historyPo.formdataModule},#{historyPo.instanceNode},#{historyPo.approveUserId},
+            #{historyPo.approveUserName},#{historyPo.approveStartTime},#{historyPo.approveEndTime},#{historyPo.approveResult},
+            #{historyPo.status})
+        </foreach>
+    </insert>
+
+    <select id="historyList" parameterType="com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo">
+        select
+        <include refid="Base_Column_List"/>
+        from ap_approve_history
+        <where>
+            base_id = #{baseId} and formdata_module = #{formdataModule} and status =0
+        </where>
+        order by approve_start_time asc
+    </select>
+
+    <select id="history" parameterType="com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo">
+        select
+        <include refid="Base_Column_List"/>
+        from ap_approve_history
+        <where>
+            base_id = #{baseId} and formdata_module = #{formdataModule} and status =0
+            and approve_user_id is null
+        </where>
+    </select>
+
+    <update id="updateHistory" parameterType="com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo">
+        update ap_approve_history
+        set
+        approve_user_id = #{approveUserId},
+        approve_user_name = #{approveUserName},
+        approve_end_time = #{approveEndTime},
+        approve_result = #{approveResult}
+        <where>
+            id = #{id} status =0
+        </where>
+    </update>
+
+</mapper>

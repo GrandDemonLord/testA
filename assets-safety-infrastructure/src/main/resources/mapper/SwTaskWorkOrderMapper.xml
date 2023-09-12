@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunyu.assets.safety.infrastructure.dao.safework.SwTaskWorkOrderMapper">
+
+    <sql id="Base_Column_List">
+        t.id,t.task_name,t.task_type_id,t.task_type_name,t.task_level_id,t.task_level_name,
+        t.task_start_time,t.task_end_time,t.asset_name,t.owning_unit_id,t.owning_unit_name,t.responsible_person,
+        t.contact_information,t.task_objectives,t.processed_by,
+        t.approve_user_id,t.approve_user_name,t.approve_time,t.approve_status,
+        t.unit_id,t.unit_name,t.dept_id,t.dept_name,
+        t.create_by,t.create_time,t.update_by,t.update_time,t.status
+    </sql>
+
+    <sql id="Base_Column_List_Assets">
+        a.id as aid,a.base_id as baseId,a.asset_id as assetId,
+        a.create_by as createBy,a.create_time as createTime,a.update_by as updateBy,a.update_time as updateTime,a.status as astatus
+    </sql>
+
+    <resultMap id="SwTaskWorkOrderPoResult" type="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderPo">
+        <id property="id" column="id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="taskTypeId" column="task_type_id"/>
+        <result property="taskTypeName" column="task_type_name"/>
+        <result property="taskLevelId" column="task_level_id"/>
+        <result property="taskLevelName" column="task_level_name"/>
+        <result property="taskStartTime" column="task_start_time"/>
+        <result property="taskEndTime" column="task_end_time"/>
+        <result property="assetName" column="asset_name"/>
+        <result property="owningUnitId" column="owning_unit_id"/>
+        <result property="owningUnitName" column="owning_unit_name"/>
+        <result property="responsiblePerson" column="responsible_person"/>
+        <result property="contactInformation" column="contact_information"/>
+        <result property="taskObjectives" column="task_objectives"/>
+        <result property="approveUserId" column="approve_user_id"/>
+        <result property="approveUserName" column="approve_user_name"/>
+        <result property="approveTime" column="approve_time"/>
+        <result property="approveStatus" column="approve_status"/>
+        <result property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="status" column="status"/>
+        <collection property="assets" ofType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderAssetsPo">
+            <id property="id" column="aid"/>
+            <result property="baseId" column="baseId"/>
+            <result property="assetId" column="assetId"/>
+            <result property="createBy" column="createBy"/>
+            <result property="createTime" column="createTime"/>
+            <result property="updateBy" column="updateBy"/>
+            <result property="updateTime" column="updateTime"/>
+            <result property="status" column="astatus"/>
+        </collection>
+    </resultMap>
+
+    <insert id="addTaskWorkOrder" parameterType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderPo"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into sw_task_work_order (task_name,task_type_id,task_type_name,task_level_id,task_level_name,
+                                        task_start_time,task_end_time,asset_name,owning_unit_id,owning_unit_name,responsible_person,
+                                        contact_information,task_objectives,processed_by,
+                                        approve_user_id,approve_user_name,approve_time,approve_status,
+                                        unit_id,unit_name,dept_id,dept_name,
+                                        create_by,create_time,update_by,update_time,status)
+        values (#{taskName}, #{taskTypeId}, #{taskTypeName}, #{taskLevelId}, #{taskLevelName},
+                #{taskStartTime}, #{taskEndTime}, #{assetName}, #{owningUnitId}, #{owningUnitName}, #{responsiblePerson},
+                #{contactInformation}, #{taskObjectives}, #{processedBy},
+                #{approveUserId}, #{approveUserName}, #{approveTime},#{approveStatus},
+                #{unitId}, #{unitName}, #{deptId}, #{deptName},
+                #{createBy}, now(), #{createBy}, now(), #{status})
+    </insert>
+
+    <select id="taskWorkOrderList" parameterType="com.kunyu.assets.safety.domain.model.safework.SwTaskWorkOrderSearchDo"
+             resultMap="SwTaskWorkOrderPoResult">
+        select <include refid="Base_Column_List"/>, <include refid="Base_Column_List_Assets"/>
+        FROM sw_task_work_order t
+        LEFT JOIN sw_task_work_order_assets a ON t.id = a.base_id and a.status = 0
+        <where>
+            t.status = 0
+            <if test="taskName != null and taskName !=''">
+                and t.task_name like concat (#{taskName}, '%')
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <update id="updateTaskWorkOrder" parameterType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderPo">
+        update sw_task_work_order
+        set
+        task_name = #{taskName}, task_type_id = #{taskTypeId}, task_type_name = #{taskTypeName}, task_level_id = #{taskLevelId}, task_level_name = #{taskLevelName},
+        task_start_time = #{taskStartTime}, task_end_time = #{taskEndTime}, asset_name = #{assetName}, owning_unit_id = #{owningUnitId}, owning_unit_name = #{owningUnitName}, responsible_person = #{responsiblePerson},
+        contact_information = #{contactInformation}, task_objectives = #{taskObjectives}, processed_by = #{processedBy},
+        update_by = #{createBy},
+        update_time = now()
+        <where>
+            id = ${id} and status = 0
+        </where>
+    </update>
+
+    <update id="deleteTaskWorkOrderById">
+        update sw_task_work_order
+        set status    = #{status},
+            update_by = #{userId}
+        where id = #{id} and status = 0
+    </update>
+
+    <select id="getTaskWorkOrderById"
+            resultType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderPo">
+        select
+        <include refid="Base_Column_List"/>
+        from sw_task_work_order t
+        <where>
+            t.id = #{id} and t.status = 0
+        </where>
+    </select>
+
+    <select id="taskWorkOrderPendingList" parameterType="com.kunyu.assets.safety.domain.model.safework.SwTaskWorkOrderSearchDo"
+            resultType="com.kunyu.assets.safety.infrastructure.po.safework.SwTaskWorkOrderPo">
+        select <include refid="Base_Column_List"/>
+        FROM sw_task_work_order t
+        <where>
+            t.status = 0
+            and t.approveStatus = #{approveStatus}
+            <if test="taskName != null and taskName !=''">
+                and t.task_name like concat (#{taskName}, '%')
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <update id="taskWorkOrderApproved" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
+        update sw_task_work_order
+        set approve_status    = #{approveStatus},
+            approve_user_id   = #{approveUserId},
+            approve_user_name = #{approveUserName},
+            approve_time      =now()
+        where id = #{id} and status = 0
+
+    </update>
+
+    <update id="taskWorkOrderRejection" parameterType="com.kunyu.assets.safety.domain.model.assets.AsAssetsApproveBuilder">
+        update sw_task_work_order
+        set approve_status    = #{approveStatus},
+            approve_user_id   = #{approveUserId},
+            approve_user_name = #{approveUserName},
+            approve_time      =now()
+        where id = #{id} and status = 0
+    </update>
+
+</mapper>

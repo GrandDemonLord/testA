@@ -15,14 +15,14 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
-* @description
+* 资产 Dto Do 互转
 *
 * @author yangliu
 * @date 2023-08-27
 */
 @Mapper
-public interface DtoDoConverter {
-    DtoDoConverter INSTANCE = Mappers.getMapper(DtoDoConverter.class);
+public interface AsDtoDoConverter {
+    AsDtoDoConverter INSTANCE = Mappers.getMapper(AsDtoDoConverter.class);
 
     AsAssetsDo getAsAssetsDo(AsAssetsDto asAssetsDto);
 
