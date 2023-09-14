@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import com.kunyu.assets.safety.common.enums.common.ApproveStatusEnum;
 import com.kunyu.assets.safety.common.enums.loophole.LoopholeReportStatusEnum;
 import com.kunyu.assets.safety.common.enums.loophole.LoopholeTaskStatusEnum;
+import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeSearchDo;
 import com.kunyu.assets.safety.domain.respository.loophole.ILoLoopholeRepository;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -107,7 +109,7 @@ public class LoopholeDomain {
     public LoLoopholeDo saveRepairOrder(LoLoopholeDo loLoopholeDo) {
         loLoopholeDo.setTaskStatus(LoopholeTaskStatusEnum.FIXING.getCode());
         loLoopholeDo.setReportStatus(LoopholeReportStatusEnum.FIXING.getCode());
-        loLoopholeDo.setApprovalStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
+        loLoopholeDo.setApproveStatus(ApproveStatusEnum.SOURCEPENDING.getCode());
         // TODO 记录表插入记录
         return iLoLoopholeRepository.updateLoLoopholeById(loLoopholeDo);
     }
@@ -170,6 +172,11 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "漏洞处理报告暂未上传，无法结束。");
         }
         String reportStatus = LoopholeReportStatusEnum.FINISHED.getCode();
+        // 校验漏洞工单是否是二次审批
+        if (!ObjectUtils.isEmpty(loLoopholeDo.getApproveStatus())
+                && ApproveStatusEnum.SOURCEREJECTION.getCode().equals(loLoopholeDo.getApproveStatus())) {
+            reportStatus = ApproveStatusEnum.VULNERABILITYORDERPENDING.getCode();
+        }
         return iLoLoopholeRepository.loopholeReortEndById(id, reportStatus, updateBy) > 0;
     }
 
@@ -197,7 +204,7 @@ public class LoopholeDomain {
         loLoopholeDo.setApproveUserName(updateName);
         loLoopholeDo.setUpdateBy(updateId);
         loLoopholeDo.setTaskStatus(LoopholeTaskStatusEnum.FIXED.getCode());
-        loLoopholeDo.setApprovalStatus(ApproveStatusEnum.SOURCEAPPROVED.getCode());
+        loLoopholeDo.setApproveStatus(ApproveStatusEnum.SOURCEAPPROVED.getCode());
         return iLoLoopholeRepository.approved(loLoopholeDo) > 0;
 
     }
@@ -218,15 +225,34 @@ public class LoopholeDomain {
         loLoopholeDo.setApproveUserName(updateName);
         loLoopholeDo.setUpdateBy(updateId);
         loLoopholeDo.setTaskStatus(LoopholeTaskStatusEnum.FIXING.getCode());
-        loLoopholeDo.setApprovalStatus(ApproveStatusEnum.SOURCEREJECTION.getCode());
+        loLoopholeDo.setReportStatus(LoopholeReportStatusEnum.FIXING.getCode());
+        loLoopholeDo.setApproveStatus(ApproveStatusEnum.VULNERABILITYORDERREJECTION.getCode());
         return iLoLoopholeRepository.rejection(loLoopholeDo) > 0;
 
     }
 
     private static void VerifyApproverStstus(LoLoopholeDo loLoopholeDo) {
-        if (!ApproveStatusEnum.SOURCEPENDING.getCode().equals(loLoopholeDo.getApprovalStatus()) ||
-                !ApproveStatusEnum.WORKORDERPENDING.getCode().equals(loLoopholeDo.getApprovalStatus())) {
+        if (!ApproveStatusEnum.SOURCEPENDING.getCode().equals(loLoopholeDo.getApproveStatus()) ||
+                !ApproveStatusEnum.WORKORDERPENDING.getCode().equals(loLoopholeDo.getApproveStatus())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "非法操作。");
         }
+    }
+
+    /**
+     * @param loLoopholeDo
+     * @return LoLoopholeDo
+     * @description 创建被驳回修复工单--管理端
+     * @author poet_wei
+     * @date 2023/9/12
+     */
+    public LoLoopholeDo saveRejectedRepairOrder(LoLoopholeDo loLoopholeDo) {
+        LoLoopholeDo loLoopholeDoExist = VerifyLoopholeExists(loLoopholeDo.getId());
+        if (!ObjectUtils.isEmpty(loLoopholeDoExist.getApproveStatus())
+                && ApproveStatusEnum.SOURCEREJECTION.getCode().equals(loLoopholeDoExist.getApproveStatus())) {
+            loLoopholeDo.setApproveStatus(ApproveStatusEnum.VULNERABILITYORDERPENDING.getCode());
+            loLoopholeDo.setReportStatus(LoopholeReportStatusEnum.FINISHED.getCode());
+            return iLoLoopholeRepository.saveRejectedRepairOrder(loLoopholeDo);
+        }
+        throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "只能操作审批驳回的资产。");
     }
 }

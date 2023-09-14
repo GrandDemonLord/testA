@@ -138,12 +138,12 @@ public class LoLoopholeDto {
      * 负责人
      */
     @NotBlank(message = "负责人不能为空", groups = LoLoopholeDtoValid.class)
-    private String responsible_person;
+    private String responsiblePerson;
 
     /**
      * 负责人联系方式
      */
-    private String contact_information;
+    private String contactInformation;
 
     /**
      * 修复建议
@@ -172,5 +172,9 @@ public class LoLoopholeDto {
      */
     private String approveUserName;
 
+    /**
+     * 审批状态
+     */
+    private String approveStatus;
 
 }

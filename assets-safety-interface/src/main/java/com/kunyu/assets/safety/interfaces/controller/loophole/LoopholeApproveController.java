@@ -13,11 +13,13 @@ import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeDto;
 import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeSearchDto;
 import com.kunyu.common.exception.PlatformException;
 import com.kunyu.common.result.ApiResponse;
-import com.kunyu.common.util.RoleUtils;
 import com.kunyu.common.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+
+import static com.kunyu.assets.safety.interfaces.controller.loophole.LoopholeApplyController.isAdminByCode;
 
 /**
  * @author poet_wei
@@ -87,7 +89,7 @@ public class LoopholeApproveController {
     // 权限校验
     private static String checkPermissions() {
         String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if (!RoleUtils.isAdminByCode(roleCode)) {
+        if (!isAdminByCode(roleCode)) {
             throw new PlatformException(HttpStatus.UNAUTHORIZED.value(), "非管理员不可以操作。");
         }
         return roleCode;

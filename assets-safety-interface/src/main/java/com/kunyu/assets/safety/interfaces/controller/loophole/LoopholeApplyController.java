@@ -14,11 +14,12 @@ import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeSearchDto;
 import com.kunyu.common.enums.RoleEnum;
 import com.kunyu.common.exception.PlatformException;
 import com.kunyu.common.result.ApiResponse;
-import com.kunyu.common.util.RoleUtils;
 import com.kunyu.common.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * @author poet_wei
@@ -91,7 +92,7 @@ public class LoopholeApplyController {
         LoLoopholeSearchDo loLoopholeSearchDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeSearchDo(loopholeSearchDto);
         // 校验是否是普通用户
         String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if (RoleUtils.isUserByCode(roleCode)) {
+        if (isAdminByCode(roleCode)) {
             loLoopholeSearchDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
         }
         return ApiResponse.success(loopholeApplication.selectRepairWorkOrder(loLoopholeSearchDo, pageNum, pageSize));
@@ -131,23 +132,26 @@ public class LoopholeApplyController {
      * @return LoLoopholeDo
      * @description 创建被驳回修复工单--管理端
      * @author poet_wei
-     * @date 2023/9/8
+     * @date 2023/9/12
      */
-    @RequestMapping(path = "/saveRepairOrder", method = RequestMethod.POST)
+    @RequestMapping(path = "/saveRejectedRepairOrder", method = RequestMethod.POST)
     public ApiResponse<LoLoopholeDo> saveRepairOrder(@RequestBody LoLoopholeDto loopholeDto) {
         checkPermissions();
         LoLoopholeDo loLoopholeDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeDo(loopholeDto);
         loLoopholeDo.setUpdateBy(ThreadLocalUtil.getUserInfo().getUserId());
-        return ApiResponse.success(loopholeApplication.saveRepairOrder(loLoopholeDo));
+        return ApiResponse.success(loopholeApplication.saveRejectedRepairOrder(loLoopholeDo));
     }
 
     // 权限校验
     private static String checkPermissions() {
         String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if (!RoleUtils.isAdminByCode(roleCode)) {
+        if (!isAdminByCode(roleCode)) {
             throw new PlatformException(HttpStatus.UNAUTHORIZED.value(), "非管理员不可以操作。");
         }
         return roleCode;
     }
 
+    public static boolean isAdminByCode(String roleCode) {
+        return Objects.equals(RoleEnum.SYSGENERALADMIN.getRoleId(), roleCode) || Objects.equals(RoleEnum.SYSSUBADMIN.getRoleId(), roleCode);
+    }
 }

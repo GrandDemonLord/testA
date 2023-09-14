@@ -144,4 +144,15 @@ public class LoopholeApplication {
     public Boolean rejection(Integer id, String updateId, String updateName) {
         return loopholeDomain.rejection(id, updateId, updateName);
     }
+
+    /**
+     * @param loLoopholeDo
+     * @return LoLoopholeDo
+     * @description 创建被驳回修复工单--管理端
+     * @author poet_wei
+     * @date 2023/9/12
+     */
+    public LoLoopholeDo saveRejectedRepairOrder(LoLoopholeDo loLoopholeDo) {
+        return loopholeDomain.saveRejectedRepairOrder(loLoopholeDo);
+    }
 }

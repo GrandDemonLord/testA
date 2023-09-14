@@ -15,8 +15,9 @@ public enum DataTypeEnum {
     ASDELIST("as_delist", "【资产管理】资产下架申请"),
     SWTASKWORKORDER("sw_taskWorkOrder", "【安全工作】任务工单申请"),
     LOUPLOAD("lo_Upload", "【漏洞管理】漏洞信息上传"),
-    LOTASKWORKORDER("lo_taskWorkOrder", "【漏洞管理】漏洞修复工单"),
-    LOTASKWORKORDERAPPROVAL("lo_taskWorkOrderApproval", "【漏洞管理】漏洞修复工单审批");
+    LOTASKWORKORDER("lo_taskWorkOrder", "【漏洞管理】创建漏洞修复工单"),
+    LOTASKWORKORDERUPLOAD("lo_taskWorkOrderUpload", "【漏洞审批】创建漏洞修复工单"),
+    LOTASKWORKORDERAPPROVAL("lo_taskWorkOrderApproval", "【漏洞管理审批】漏洞修复工单审批");
 
     private String code;
     private String name;

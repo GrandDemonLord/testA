@@ -97,11 +97,9 @@ public class LoLoopholeDo extends BaseModel {
     // 审批人名称
     private String approveUserName;
 
-    // 审批状态（pending：待审批、approved：审批通过、rejection：审批驳回）
-    private String approvalStatus;
+    // 审批状态 (pending：待审批、approved：审批通过、rejection：审批驳回)
+    private String approveStatus;
 
     // 修复漏洞报告
     private String remediationReport;
-
-
 }
