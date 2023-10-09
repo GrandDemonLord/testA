@@ -8,6 +8,15 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @description 启动类
@@ -17,6 +26,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication(scanBasePackages = "com.kunyu")
 @MapperScan("com.kunyu.assets.safety.infrastructure")
 @EnableDiscoveryClient
+@EnableFeignClients(basePackages = "com.kunyu.assets.safety.domain.feignclients")
 public class Application {
     /**
      * @description 启动方法

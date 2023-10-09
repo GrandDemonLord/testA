@@ -16,11 +16,14 @@ import java.time.LocalDate;
 @Data
 public class LoLoopholeDo extends BaseModel {
 
-    // 工单类型code
-    private String dataTypeCode;
+    // 表单类型code
+    private String formdataTypeCode;
 
-    // 工单类型name
-    private String dataTypeName;
+    // 表单类型name
+    private String formdataTypeName;
+
+    // 表单模块
+    private String formdataModule;
 
     // 漏洞名称
     private String name;
@@ -37,8 +40,11 @@ public class LoLoopholeDo extends BaseModel {
     // 漏洞等级名称
     private String loopholeLevelName;
 
-    // 漏洞来源
-    private String source;
+    // 漏洞来源id
+    private String loopholeSourceId;
+
+    // 漏洞来源名称
+    private String loopholeSourceName;
 
     // 目标地址
     private String targetAddress;
@@ -47,16 +53,16 @@ public class LoLoopholeDo extends BaseModel {
     private String affectedComponents;
 
     // 任务周期开始时间（管理员指定）
-    private LocalDate taskStartTime;
+    private String taskStartTime;
 
     // 任务周期结束时间（管理员指定）
-    private LocalDate taskEndTime;
+    private String taskEndTime;
 
     // 任务开启时间（点击开始时间）
-    private LocalDate orderStartTime;
+    private String orderStartTime;
 
     // 任务结束时间（点击结束时间）
-    private LocalDate orderEndTime;
+    private String orderEndTime;
 
     // 任务状态 (待修复：fixing、已修复：fixed、已忽略：ignored)
     private String taskStatus;
@@ -64,8 +70,11 @@ public class LoLoopholeDo extends BaseModel {
     // 报告状态（待开始：pending、待上传：upload、待结束：submission、已结束：finished）
     private String reportStatus;
 
-    // 负责人
+    // 负责人id
     private String responsiblePerson;
+
+    // 负责人
+    private String responsiblePersonName;
 
     // 负责人联系方式
     private String contactInformation;
@@ -76,20 +85,35 @@ public class LoLoopholeDo extends BaseModel {
     // 处置人
     private String processedBy;
 
+    // 处置人id
+    private String processedId;
+
     // 处置人联系方式
     private String processedInformation;
 
-    // 直属/所属单位id
-    private String owningUnitId;
+    // 负责人单位id
+    private String responsibleUnitId;
 
-    // 直属/所属单位name
-    private String owningUnitName;
+    // 负责人单位名称
+    private String responsibleUnitName;
 
-    // 管理单位id
-    private String managementUnitId;
+    // 负责人部门id
+    private String responsibleDeptId;
 
-    // 管理单位name
-    private String managementUnitName;
+    // 负责人部门名称
+    private String responsibleDeptName;
+
+    // 处置人单位id
+    private String processedUnitId;
+
+    // 处置人单位名称
+    private String processedUnitName;
+
+    // 处置人部门id
+    private String processedDeptId;
+
+    // 处置人部门名称
+    private String processedDeptName;
 
     // 审批人账号
     private String approveUserId;
@@ -100,6 +124,9 @@ public class LoLoopholeDo extends BaseModel {
     // 审批状态 (pending：待审批、approved：审批通过、rejection：审批驳回)
     private String approveStatus;
 
-    // 修复漏洞报告
-    private String remediationReport;
+    // 修复漏洞报告id
+    private String loopholeReportId;
+
+    // 修复漏洞报告名称
+    private String loopholeReportName;
 }

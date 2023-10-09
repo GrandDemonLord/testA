@@ -6,6 +6,8 @@ package com.kunyu.assets.safety.infrastructure.respositoryimpl.common;
 
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistoryDo;
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo;
+import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
+import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeSearchDo;
 import com.kunyu.assets.safety.domain.respository.commoon.IApApproveHistoryRepository;
 import com.kunyu.assets.safety.infrastructure.converter.common.ApDoPoConverter;
 import com.kunyu.assets.safety.infrastructure.dao.common.ApApproveHistoryMapper;
@@ -45,4 +47,6 @@ public class ApApproveHistoryRepositoryImpl implements IApApproveHistoryReposito
     public boolean updateHistoryDo(ApApproveHistoryDo historyDo) {
         return apApproveHistoryMapper.updateHistory(ApDoPoConverter.INSTANCE.getApApproveHistoryPo(historyDo)) > 0 ? true : false;
     }
+
+
 }

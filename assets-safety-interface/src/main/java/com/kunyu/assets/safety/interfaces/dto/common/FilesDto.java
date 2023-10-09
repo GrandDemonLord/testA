@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 */
 @Data
 public class FilesDto {
+
     @NotBlank(message = "附件id不能为空", groups = FilesDownloadValid.class)
     private String fileId;
 

@@ -14,14 +14,16 @@ public enum ApproveStatusEnum {
     SOURCEPENDING("source_pending", "待审批"),
     SOURCEAPPROVED("source_approved", "审批通过"),
     SOURCEREJECTION("source_rejection", "审批驳回"),
+    SOURCEIGNORE("source_ignore", "审批忽略"),
 
     WORKORDERPENDING("workOrder_pending", "待审批"),
     WORKORDERAPPROVED("workOrder_approved", "审批通过"),
     WORKORDERREJECTION("workOrder_rejection", "审批驳回"),
 
-    VULNERABILITYORDERPENDING("VulnerabilityOrder_pending", "待审批"),
-    VULNERABILITYORDERAPPROVED("VulnerabilityOrder_approved", "审批通过"),
-    VULNERABILITYORDERREJECTION("VulnerabilityOrder_rejection", "审批驳回");
+    VULNERABILITYORDERPROCESSED("vulnerabilityOrder_processed", "待处置"),
+    VULNERABILITYORDERPENDING("vulnerabilityOrder_pending", "待审批"),
+    VULNERABILITYORDERAPPROVED("vulnerabilityOrder_approved", "审批通过"),
+    VULNERABILITYORDERREJECTION("vulnerabilityOrder_rejection", "审批驳回");
 
     private String code;
     private String name;

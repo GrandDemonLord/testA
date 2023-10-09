@@ -4,11 +4,14 @@
 
 package com.kunyu.assets.safety.interfaces.dto.loophole;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kunyu.assets.safety.interfaces.valid.loophole.LoLoopholeDtoValid;
+import com.kunyu.assets.safety.interfaces.valid.loophole.LoLoopholeOrderDtoValid;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -22,69 +25,56 @@ public class LoLoopholeDto {
 
     private Integer id;
 
-    private String dataTypeCode;
+    // 表单类型code
+    private String formdataTypeCode;
 
-    private String dataTypeName;
+    // 表单类型name
+    private String formdataTypeName;
 
-    @NotBlank(message = "漏洞类型不能为空", groups = LoLoopholeDtoValid.class)
+    // 表单模块
+    private String formdataModule;
+
+    @NotNull(message = "漏洞类型不能为空", groups = LoLoopholeDtoValid.class)
     private Integer loopholeTypeId;
 
-    @NotBlank(message = "漏洞类型名称不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "漏洞类型名称不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String loopholeTypeName;
 
-    @NotBlank(message = "漏洞等级不能为空", groups = LoLoopholeDtoValid.class)
+    @NotNull(message = "漏洞等级不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private Integer loopholeLevelId;
 
-    @NotBlank(message = "漏洞登记名称不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "漏洞等级名称不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String loopholeLevelName;
 
     /**
      * 漏洞名称
      */
-    @NotBlank(message = "漏洞名称不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "漏洞名称不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String name;
 
     /**
-     * 漏洞来源
+     * 漏洞来源id
      */
-    @NotBlank(message = "漏洞来源不能为空", groups = LoLoopholeDtoValid.class)
-    private String source;
+    @NotBlank(message = "漏洞来源id不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
+    private String loopholeSourceId;
+
+    /**
+     * 漏洞来源名称
+     */
+    @NotBlank(message = "漏洞来源名称不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
+    private String loopholeSourceName;
 
     /**
      * 目标地址
      */
-    @NotBlank(message = "目标地址不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "目标地址不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String targetAddress;
 
     /**
      * 受影响的组件
      */
-    @NotBlank(message = "受影响的组件不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "受影响的组件不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String affectedComponents;
-
-    /**
-     * 直属/所属单位id
-     */
-    @NotBlank(message = "单位不能为空", groups = LoLoopholeDtoValid.class)
-    private String owningUnitId;
-
-    /**
-     * 直属/所属单位name
-     */
-    @NotBlank(message = "单位名称不能为空", groups = LoLoopholeDtoValid.class)
-    private String owningUnitName;
-
-    /**
-     * 部门id
-     */
-    @NotBlank(message = "部门不能为空", groups = LoLoopholeDtoValid.class)
-    private String managementUnitId;
-
-    /**
-     * 部门名称
-     */
-    @NotBlank(message = "部门名称不能为空", groups = LoLoopholeDtoValid.class)
-    private String managementUnitName;
 
     /**
      * 单位（用户组）
@@ -98,7 +88,6 @@ public class LoLoopholeDto {
     /**
      * 部门（用户组）
      */
-    @NotBlank(message = "部门名称不能为空", groups = LoLoopholeDtoValid.class)
     private String deptId;
 
     /**
@@ -110,25 +99,27 @@ public class LoLoopholeDto {
      * 任务开始时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private LocalDate taskStartTime;
+    private String taskStartTime;
 
     /**
      * 任务结束时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private LocalDate taskEndTime;
+    private String taskEndTime;
 
     /**
      * 任务开始时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private LocalDate orderStartTime;
+    @NotBlank(message = "任务开始时间不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String orderStartTime;
 
     /**
      * 任务结束时间
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private LocalDate orderEndTime;
+    @NotBlank(message = "任务结束时间不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String orderEndTime;
 
     /**
      * 工单报告状态
@@ -137,9 +128,62 @@ public class LoLoopholeDto {
     /**
      * 负责人
      */
-    @NotBlank(message = "负责人不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "负责人账号不能为空", groups = LoLoopholeDtoValid.class)
     private String responsiblePerson;
 
+    /**
+     * 负责人
+     */
+    @NotBlank(message = "负责人名称不能为空", groups = LoLoopholeDtoValid.class)
+    private String responsiblePersonName;
+
+    /**
+     * 负责人单位id
+     */
+    @NotBlank(message = "负责人单位id不能为空", groups = LoLoopholeDtoValid.class)
+    private String responsibleUnitId;
+
+    /**
+     * 负责人单位名称
+     */
+    @NotBlank(message = "负责人单位名称不能为空", groups = LoLoopholeDtoValid.class)
+    private String responsibleUnitName;
+
+    /**
+     * 负责人部门id
+     */
+    @NotBlank(message = "负责人部门id不能为空", groups = LoLoopholeDtoValid.class)
+    private String responsibleDeptId;
+
+    /**
+     * 负责人部门
+     */
+    @NotBlank(message = "负责人部门名称不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String responsibleDeptName;
+
+    /**
+     * 处置人单位id
+     */
+    @NotBlank(message = "处置人单位id不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String processedUnitId;
+
+    /**
+     * 负责人单位名称
+     */
+    @NotBlank(message = "处置人单位名称不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String processedUnitName;
+
+    /**
+     * 处置人部门id
+     */
+    @NotBlank(message = "处置人部门id不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String processedDeptId;
+
+    /**
+     * 处置人部门名称
+     */
+    @NotBlank(message = "处置人部门名称不能为空", groups = LoLoopholeOrderDtoValid.class)
+    private String processedDeptName;
     /**
      * 负责人联系方式
      */
@@ -148,14 +192,18 @@ public class LoLoopholeDto {
     /**
      * 修复建议
      */
-    @NotBlank(message = "修复建议不能为空", groups = LoLoopholeDtoValid.class)
+    @NotBlank(message = "修复建议不能为空", groups = {LoLoopholeDtoValid.class,LoLoopholeOrderDtoValid.class})
     private String fixRecommendation;
 
     /**
      * 设备处置人
      */
-    @NotBlank(message = "处置人不能为空", groups = LoLoopholeDtoValid.class)
     private String processedBy;
+
+    /**
+     * 处置人id
+     */
+    private String processedId;
 
     /**
      * 处置人联系方式

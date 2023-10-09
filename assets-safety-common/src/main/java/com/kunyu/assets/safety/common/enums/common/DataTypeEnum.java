@@ -17,7 +17,8 @@ public enum DataTypeEnum {
     LOUPLOAD("lo_Upload", "【漏洞管理】漏洞信息上传"),
     LOTASKWORKORDER("lo_taskWorkOrder", "【漏洞管理】创建漏洞修复工单"),
     LOTASKWORKORDERUPLOAD("lo_taskWorkOrderUpload", "【漏洞审批】创建漏洞修复工单"),
-    LOTASKWORKORDERAPPROVAL("lo_taskWorkOrderApproval", "【漏洞管理审批】漏洞修复工单审批");
+    LOTASKWORKORDERAPPROVAL("lo_taskWorkOrderApproval", "【漏洞管理审批】漏洞修复工单审批"),
+    LEGALWORKORDER("lm_legalworkorder","【法律法规】法律法规检查工单");
 
     private String code;
     private String name;

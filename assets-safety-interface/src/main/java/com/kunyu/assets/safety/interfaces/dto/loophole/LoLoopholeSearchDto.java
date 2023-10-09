@@ -15,6 +15,7 @@ import java.time.LocalDate;
  */
 @Data
 public class LoLoopholeSearchDto {
+
     private String name;
 
     private String dataTypeCode;
@@ -29,15 +30,10 @@ public class LoLoopholeSearchDto {
 
     private String loopholeLevelName;
 
-    private String taskStatus;
-    /**
-     * 任务开始时间
-     */
-    private LocalDate taskStartTime;
+    private String approveStatus;
 
-    /**
-     * 任务结束时间
-     */
-    private LocalDate taskEndTime;
+    private String taskStartTime;
+
+    private String taskEndTime;
 
 }

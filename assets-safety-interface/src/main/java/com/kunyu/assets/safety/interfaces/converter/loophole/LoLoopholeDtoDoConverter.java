@@ -6,10 +6,17 @@ package com.kunyu.assets.safety.interfaces.converter.loophole;
 
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeSearchDo;
+import com.kunyu.assets.safety.domain.model.loophole.ReportFilesDo;
+import com.kunyu.assets.safety.interfaces.dto.assets.AsAssetsImportDto;
 import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeDto;
+import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeImportDto;
 import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeSearchDto;
+import com.kunyu.assets.safety.interfaces.dto.loophole.ReportFilesDto;
+import com.kunyu.assets.safety.interfaces.valid.common.ValidList;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * @author poet_wei
@@ -23,4 +30,6 @@ public interface LoLoopholeDtoDoConverter {
     LoLoopholeSearchDo getLoopholeSearchDo(LoLoopholeSearchDto loopholeSearchDto);
 
     LoLoopholeDo getLoopholeDo(LoLoopholeDto loopholeDto);
+
+    List<LoLoopholeDo> getLoLoopholeDos(ValidList<LoLoopholeImportDto> importDtos);
 }

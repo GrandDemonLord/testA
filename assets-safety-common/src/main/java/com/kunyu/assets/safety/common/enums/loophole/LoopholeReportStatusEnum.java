@@ -12,11 +12,9 @@ package com.kunyu.assets.safety.common.enums.loophole;
  */
 public enum LoopholeReportStatusEnum {
 
-
-    FIXING( "fixing"), // 待开始
-    UPLOAD("upload"), // 待上传
-    SUBMISSION("submission"), // 待结束
-    FINISHED("finished"); // 已结束
+    NOTSTARTED("notStarted"), // 未开始 （用户创建漏洞信息初始化状态）
+    UPLOADING("uploading"), // 上传中 （管理员审批漏洞信息状态）
+    END( "end"); // 结束 （管理员审批漏洞信息状态）
 
     private String code;
 

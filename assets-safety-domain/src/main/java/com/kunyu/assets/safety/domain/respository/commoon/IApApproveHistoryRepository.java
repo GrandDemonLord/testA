@@ -6,6 +6,8 @@ package com.kunyu.assets.safety.domain.respository.commoon;
 
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistoryDo;
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo;
+import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
+import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeSearchDo;
 
 import java.util.List;
 
@@ -25,6 +27,8 @@ public interface IApApproveHistoryRepository {
      * @date 2023/9/12
      */
     int addApproveHistory(List<ApApproveHistoryDo> historyDos);
+
+
 
     /**
      * 审批历史查询
@@ -55,4 +59,5 @@ public interface IApApproveHistoryRepository {
      * @date 2023/9/12
      */
     boolean updateHistoryDo(ApApproveHistoryDo historyDo);
+
 }

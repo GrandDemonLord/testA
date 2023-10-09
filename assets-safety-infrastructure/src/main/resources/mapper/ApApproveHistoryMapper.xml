@@ -20,6 +20,7 @@
         </foreach>
     </insert>
 
+
     <select id="historyList" parameterType="com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo"
             resultType="com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo">
         select
@@ -38,11 +39,12 @@
         from ap_approve_history
         <where>
             base_id = #{baseId} and formdata_module = #{formdataModule} and status =0
-            and approve_user_id is null
+            and
+             (approve_user_id = '' OR approve_user_id IS NULL)
         </where>
     </select>
 
-    <update id="updateHistory" parameterType="com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo">
+    <update id="updateHistory">
         update ap_approve_history
         set
         approve_user_id = #{approveUserId},
@@ -50,7 +52,7 @@
         approve_end_time = #{approveEndTime},
         approve_result = #{approveResult}
         <where>
-            id = #{id} status =0
+            id = #{id} and  status = 0
         </where>
     </update>
 

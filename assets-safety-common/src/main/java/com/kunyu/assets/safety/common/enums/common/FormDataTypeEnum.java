@@ -13,9 +13,14 @@ package com.kunyu.assets.safety.common.enums.common;
 public enum FormDataTypeEnum {
     ASLISTING("as_listing", "【资产管理】资产上架申请", "asset"),
     ASDELIST("as_delist", "【资产管理】资产下架申请", "asset"),
-    SWTASKWORKORDER("sw_taskWorkOrder", "【安全工作】任务工单申请", "taskWorkOrder"),
-    SWTASKWORKORDERPROCESSED("sw_taskWorkOrderProcessed", "【安全工作】任务工单处置申请", "taskWorkOrder");
 
+    SWTASKWORKORDER("sw_taskWorkOrder", "【安全工作】任务工单申请", "taskWorkOrder"),
+    SWTASKWORKORDERPROCESSED("sw_taskWorkOrderProcessed", "【安全工作】任务工单处置申请", "taskWorkOrder"),
+
+    LOUPLOADAPPROVAL("lo_UploadApproval", "【漏洞管理】漏洞信息上传审批","loopholeTaskWorkOrder"),
+    LOTASKWORKORDERAPPROVAL("lo_taskWorkOrderApproval", "【漏洞审批】漏洞修复工单审批","loopholeTaskWorkOrder"),
+
+    LEGALWORKORDER("lm_legalworkorder","【法律法规】法律法规检查工单","legalworkorder");
     private String code;
     private String name;
     private String module;

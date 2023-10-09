@@ -5,21 +5,26 @@
 package com.kunyu.assets.safety.interfaces.controller.loophole;
 
 import com.github.pagehelper.PageInfo;
-import com.kunyu.assets.safety.application.assets.LoopholeApplication;
+import com.kunyu.assets.safety.application.loophole.LoopholeApplication;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeSearchDo;
 import com.kunyu.assets.safety.interfaces.converter.loophole.LoLoopholeDtoDoConverter;
 import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeDto;
+import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeImportDto;
 import com.kunyu.assets.safety.interfaces.dto.loophole.LoLoopholeSearchDto;
+import com.kunyu.assets.safety.interfaces.valid.common.ValidList;
+import com.kunyu.assets.safety.interfaces.valid.loophole.LoLoopholeDtoValid;
 import com.kunyu.common.enums.RoleEnum;
 import com.kunyu.common.exception.PlatformException;
+import com.kunyu.common.models.UserInfo;
 import com.kunyu.common.result.ApiResponse;
 import com.kunyu.common.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.List;
 
 /**
  * @author poet_wei
@@ -36,122 +41,151 @@ public class LoopholeApplyController {
 
 
     /**
-     * @description 漏洞信息条件分页查询
-     *
      * @param loopholeSearchDto pageNum pageSize
      * @return LoLoopholeDo
+     * @description 漏洞信息条件分页查询 （普通用户）
      * @author poet_wei
      * @date 2023/9/6
      */
-    @RequestMapping(path = "/listingList", method = RequestMethod.POST)
-    public ApiResponse<PageInfo<LoLoopholeDo>> listingList(@RequestBody LoLoopholeSearchDto loopholeSearchDto,
-                                                           @RequestParam(defaultValue = "1") int pageNum,
-                                                           @RequestParam(defaultValue = "10") int pageSize) {
+    @RequestMapping(path = "/selectLoophole", method = RequestMethod.POST)
+    public ApiResponse<PageInfo<LoLoopholeDo>> selectLoophole(@RequestBody LoLoopholeSearchDto loopholeSearchDto,
+                                                              @RequestParam(defaultValue = "1") int pageNum,
+                                                              @RequestParam(defaultValue = "10") int pageSize) {
         if (pageSize > 200) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
         }
         LoLoopholeSearchDo loLoopholeSearchDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeSearchDo(loopholeSearchDto);
-        String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if(RoleEnum.SYSENGINEER.getRoleId().equals(roleCode) || RoleEnum.SYSUSER.getRoleId().equals(roleCode)){
-            loLoopholeSearchDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
-        }
-        return ApiResponse.success(loopholeApplication.listingList(loLoopholeSearchDo, pageNum, pageSize));
+        UserInfo userInfo = ThreadLocalUtil.getUserInfo();
+        loLoopholeSearchDo.setCreateBy(userInfo.getUserId());
+        return ApiResponse.success(loopholeApplication.selectLoophole(loLoopholeSearchDo, pageNum, pageSize));
     }
 
     /**
-     * @description 新增漏洞信息
-     *
+     * @param loopholeSearchDto pageNum pageSize
+     * @return LoLoopholeDo
+     * @description 漏洞信息条件分页查询 (管理员查询)
+     * @author poet_wei
+     * @date 2023/9/6
+     */
+    @RequestMapping(path = "/adminSelectLoophole", method = RequestMethod.POST)
+    public ApiResponse<PageInfo<LoLoopholeDo>> adminSelectLoophole(@RequestBody LoLoopholeSearchDto loopholeSearchDto,
+                                                                   @RequestParam(defaultValue = "1") int pageNum,
+                                                                   @RequestParam(defaultValue = "10") int pageSize) {
+        checkPermissions();
+        if (pageSize > 200) {
+            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
+        }
+        LoLoopholeSearchDo loLoopholeSearchDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeSearchDo(loopholeSearchDto);
+        loLoopholeSearchDo.setUnitId(ThreadLocalUtil.getUserInfo().getUnitId());
+        loLoopholeSearchDo.setRoleCode(ThreadLocalUtil.getUserInfo().getRoleCode());
+        return ApiResponse.success(loopholeApplication.adminSelectLoophole(loLoopholeSearchDo, pageNum, pageSize));
+    }
+
+    /**
      * @param loopholeDto
      * @return LoLoopholeDo
+     * @description 新增漏洞信息
      * @author poet_wei
      * @date 2023/9/6
      */
     @RequestMapping(path = "/saveLoophole", method = RequestMethod.POST)
-    public ApiResponse<LoLoopholeDo> saveLoophole(@RequestBody LoLoopholeDto loopholeDto) {
+    public ApiResponse<LoLoopholeDo> saveLoophole(@Validated(LoLoopholeDtoValid.class) @RequestBody LoLoopholeDto loopholeDto) {
         LoLoopholeDo loLoopholeDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeDo(loopholeDto);
-        loLoopholeDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
-        loLoopholeDo.setUpdateBy(ThreadLocalUtil.getUserInfo().getUserId());
+        UserInfo userInfo = ThreadLocalUtil.getUserInfo();
+        loLoopholeDo.setCreateBy(userInfo.getUserId());
+        loLoopholeDo.setUnitId(userInfo.getUnitId());
+        loLoopholeDo.setUnitName(userInfo.getUnitName());
+        loLoopholeDo.setDeptId(userInfo.getDeptId());
+        loLoopholeDo.setDeptName(userInfo.getDeptName());
         return ApiResponse.success(loopholeApplication.saveLoophole(loLoopholeDo));
     }
 
-    /**
-     * @description 修复工单信息查询--用户端
-     *
-     * @param loopholeSearchDto pageNum pageSize
-     * @return LoLoopholeDo
-     * @author poet_wei
-     * @date 2023/9/8
-     */
-    @RequestMapping(path = "/selectRepairOrder", method = RequestMethod.POST)
-    public ApiResponse<PageInfo<LoLoopholeDo>> selectRepairWorkOrder(@RequestBody LoLoopholeSearchDto loopholeSearchDto,
-                                                           @RequestParam(defaultValue = "1") int pageNum,
-                                                           @RequestParam(defaultValue = "10") int pageSize) {
-        if (pageSize > 200) {
-            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
-        }
-        LoLoopholeSearchDo loLoopholeSearchDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeSearchDo(loopholeSearchDto);
-        // 校验是否是普通用户
-        String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if (isAdminByCode(roleCode)) {
-            loLoopholeSearchDo.setCreateBy(ThreadLocalUtil.getUserInfo().getUserId());
-        }
-        return ApiResponse.success(loopholeApplication.selectRepairWorkOrder(loLoopholeSearchDo, pageNum, pageSize));
-    }
-
 
     /**
-     * @description 漏洞报告开始
-     *
      * @param id 漏洞id
      * @return Boolean
+     * @description 漏洞报告开始
      * @author poet_wei
      * @date 2023/9/12
      */
     @RequestMapping(path = "/loopholeReortStart/{id}", method = RequestMethod.GET)
-    public ApiResponse<Boolean> loopholeReortStart(@PathVariable("id") Integer id) {
-        String updateBy = ThreadLocalUtil.getUserInfo().getUserId();
-        return ApiResponse.success(loopholeApplication.loopholeReortStart(id,updateBy));
+    public ApiResponse<Boolean> loopholeReportStart(@PathVariable("id") Integer id) {
+        return ApiResponse.success(loopholeApplication.loopholeReportStart(id, ThreadLocalUtil.getUserInfo().getUserId()));
     }
 
     /**
-     * @description 漏洞报告结束
-     *
      * @param id 漏洞id
      * @return Boolean
+     * @description 漏洞报告结束
      * @author poet_wei
      * @date 2023/9/12
      */
     @RequestMapping(path = "/loopholeReortEnd/{id}", method = RequestMethod.GET)
-    public ApiResponse<Boolean> loopholeReortEnd(@PathVariable("id") Integer id) {
-        String updateBy = ThreadLocalUtil.getUserInfo().getUserId();
-        return ApiResponse.success(loopholeApplication.loopholeReortEnd(id,updateBy));
+    public ApiResponse<Boolean> loopholeReportEnd(@PathVariable("id") Integer id) {
+        return ApiResponse.success(loopholeApplication.loopholeReportEnd(id, ThreadLocalUtil.getUserInfo().getUserId()));
     }
 
     /**
-     * @param loopholeDto
-     * @return LoLoopholeDo
-     * @description 创建被驳回修复工单--管理端
+     * @param id 漏洞id
+     * @return Boolean
+     * @description 漏洞报告删除
      * @author poet_wei
      * @date 2023/9/12
      */
-    @RequestMapping(path = "/saveRejectedRepairOrder", method = RequestMethod.POST)
-    public ApiResponse<LoLoopholeDo> saveRepairOrder(@RequestBody LoLoopholeDto loopholeDto) {
-        checkPermissions();
-        LoLoopholeDo loLoopholeDo = LoLoopholeDtoDoConverter.INSTANCE.getLoopholeDo(loopholeDto);
-        loLoopholeDo.setUpdateBy(ThreadLocalUtil.getUserInfo().getUserId());
-        return ApiResponse.success(loopholeApplication.saveRejectedRepairOrder(loLoopholeDo));
+    @RequestMapping(path = "/deleteReport/{id}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> deleteReport(@PathVariable("id") Integer id) {
+        return ApiResponse.success(loopholeApplication.deleteReport(id, ThreadLocalUtil.getUserInfo().getUserId()));
+    }
+
+
+    /**
+     * @param
+     * @return LoLoopholeDo
+     * @description 查询代办任务
+     * @author poet_wei
+     * @date 2023/9/15
+     */
+    @RequestMapping(path = "/selectTaskQuery", method = RequestMethod.GET)
+    public ApiResponse<PageInfo<LoLoopholeDo>> selectTaskQuery(@RequestParam(defaultValue = "1") int pageNum,
+                                                           @RequestParam(defaultValue = "10") int pageSize) {
+        if (pageSize > 200) {
+            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
+        }
+        LoLoopholeSearchDo loLoopholeSearchDo = new LoLoopholeSearchDo();
+        loLoopholeSearchDo.setRoleCode(ThreadLocalUtil.getUserInfo().getRoleCode());
+        loLoopholeSearchDo.setProcessedId(ThreadLocalUtil.getUserInfo().getUserId());
+        loLoopholeSearchDo.setUnitId(ThreadLocalUtil.getUserInfo().getUnitId());
+        return ApiResponse.success(loopholeApplication.selectTaskQuery(loLoopholeSearchDo,pageNum,pageSize));
+    }
+
+    /**
+     * 新增漏洞批量导入 批量导入
+     *
+     * @param importDtos
+     * @return LoLoopholeDo
+     */
+    @RequestMapping(value = "/batchSaveLoophole", method = RequestMethod.POST)
+    public ApiResponse<List<LoLoopholeDo>> batchSaveLoophole(@Validated(LoLoopholeDtoValid.class) @RequestBody ValidList<LoLoopholeImportDto> importDtos) {
+        List<LoLoopholeDo> loLoopholeDos = LoLoopholeDtoDoConverter.INSTANCE.getLoLoopholeDos(importDtos);
+        UserInfo userInfo = ThreadLocalUtil.getUserInfo();
+        for (LoLoopholeDo loLoopholeDo : loLoopholeDos) {
+            loLoopholeDo.setUnitId(userInfo.getUnitId());
+            loLoopholeDo.setUnitName(userInfo.getUnitName());
+            loLoopholeDo.setDeptId(userInfo.getDeptId());
+            loLoopholeDo.setDeptName(userInfo.getDeptName());
+            loLoopholeDo.setCreateBy(userInfo.getUserId());
+        }
+        return ApiResponse.success(loopholeApplication.batchSaveLoophole(loLoopholeDos, ThreadLocalUtil.getUserInfo().getUserId()));
     }
 
     // 权限校验
     private static String checkPermissions() {
         String roleCode = ThreadLocalUtil.getUserInfo().getRoleCode();
-        if (!isAdminByCode(roleCode)) {
-            throw new PlatformException(HttpStatus.UNAUTHORIZED.value(), "非管理员不可以操作。");
+        if (!RoleEnum.SYSGENERALADMIN.getRoleId().equals(roleCode) && !RoleEnum.SYSSUBADMIN.getRoleId().equals(roleCode)) {
+           throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "权限不够无法操作。");
         }
-        return roleCode;
+        return ThreadLocalUtil.getUserInfo().getUnitId();
     }
 
-    public static boolean isAdminByCode(String roleCode) {
-        return Objects.equals(RoleEnum.SYSGENERALADMIN.getRoleId(), roleCode) || Objects.equals(RoleEnum.SYSSUBADMIN.getRoleId(), roleCode);
-    }
+
 }

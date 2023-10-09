@@ -12,12 +12,15 @@ package com.kunyu.assets.safety.common.enums.loophole;
 */
 public enum LoopholeTypeEnum {
     XSS_ATTACK("1", "跨站脚本攻击（XSS）"),
-    SQL_INJECTION_ATTACK("2", "SQL注入"),
-    CSRF_VULNERABILITY("3", "跨站请求伪造（CSRF）");
-
+    CSRF_VULNERABILITY("2", "跨站请求伪造（CSRF）"),
+    SQL_INJECTION_ATTACK("3", "SQL注入攻击"),
+    CODE_INJECTION_VULNERABILITY("4", "代码注入漏洞"),
+    FILE_INCLUSION_VULNERABILITY("5", "文件包含漏洞"),
+    UNAUTHENTICATED_ACCESS("6", "未经身份验证的访问"),
+    REMOTE_CODE_EXECUTION("7", "远程代码执行（RCE）"),
+    DENIAL_OF_SERVICE("8", "拒绝服务（DoS）");
     private String id;
     private String name;
-
     LoopholeTypeEnum(String id, String name) {
         this.id = id;
         this.name = name;

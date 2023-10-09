@@ -4,10 +4,7 @@
 
 package com.kunyu.assets.safety.infrastructure.converter.loophole;
 
-import com.kunyu.assets.safety.domain.model.assets.AsAssetsDo;
 import com.kunyu.assets.safety.domain.model.loophole.LoLoopholeDo;
-import com.kunyu.assets.safety.infrastructure.converter.assets.DoPoConverter;
-import com.kunyu.assets.safety.infrastructure.po.assets.AsAssetsPo;
 import com.kunyu.assets.safety.infrastructure.po.loophole.LoLoopholePo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -28,4 +25,6 @@ public interface LoopholeDoPoConverter {
     List<LoLoopholeDo> getLoLoopholeDos(List<LoLoopholePo> loLoopholePos);
 
     LoLoopholeDo getLoLoopholeDo(LoLoopholePo LoLoopholePo);
+
+    List<LoLoopholePo> getLoLoopholePos(List<LoLoopholeDo> loLoopholeDos);
 }

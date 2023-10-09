@@ -8,7 +8,8 @@ package com.kunyu.assets.safety.common.enums.common;
 */
 public enum FilesTemplateEnum {
 
-    ASSETSIMPORT("assetsImport", "资产批量导入模板.xlsx");
+    ASSETSIMPORT("assetsImport", "资产批量导入模板.xlsx"),
+    LOOPHOLEIMPORT("loopholeImport", "漏洞批量导入模板.xlsx");
 
     private String fileType;
     private String fileName;

@@ -5,7 +5,9 @@
 package com.kunyu.assets.safety.interfaces.converter.common;
 
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo;
+import com.kunyu.assets.safety.domain.model.loophole.ReportFilesDo;
 import com.kunyu.assets.safety.interfaces.dto.common.ApApproveHistorySearchDto;
+import com.kunyu.assets.safety.interfaces.dto.common.FilesDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -20,4 +22,7 @@ public interface ApDtoDoConverter {
     ApDtoDoConverter INSTANCE = Mappers.getMapper(ApDtoDoConverter.class);
 
     ApApproveHistorySearchDo historySearchDo(ApApproveHistorySearchDto historySearchDto);
+
+    ReportFilesDo getFilesDo(FilesDto filesDto);
+
 }

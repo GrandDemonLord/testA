@@ -13,7 +13,8 @@ package com.kunyu.assets.safety.common.enums.common;
 public enum ApproveResultEnum {
     APPLY("已提交"),
     APPROVERD("通过"),
-    REJECTION("驳回");
+    REJECTION("驳回"),
+    IGNORE("忽略");
 
     private String name;
 

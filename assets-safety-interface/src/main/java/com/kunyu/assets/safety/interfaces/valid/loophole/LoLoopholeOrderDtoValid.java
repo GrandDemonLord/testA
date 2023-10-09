@@ -7,7 +7,7 @@ package com.kunyu.assets.safety.interfaces.valid.loophole;
 /**
 * 添加漏洞信息校验
 *
-* @author yangliu
+* @author poet_wei
 * @date 2023-08-25
 */
 public interface LoLoopholeOrderDtoValid {

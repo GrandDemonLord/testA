@@ -5,7 +5,9 @@
 package com.kunyu.assets.safety.infrastructure.converter.common;
 
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistoryDo;
+import com.kunyu.assets.safety.domain.model.loophole.ReportFilesDo;
 import com.kunyu.assets.safety.infrastructure.po.common.ApApproveHistoryPo;
+import com.kunyu.assets.safety.infrastructure.po.loophole.ReportFilesPo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -28,4 +30,6 @@ public interface ApDoPoConverter {
     ApApproveHistoryPo getApApproveHistoryPo(ApApproveHistoryDo historyDo);
 
     ApApproveHistoryDo getApApproveHistoryDo(ApApproveHistoryPo historyPo);
+
+    ReportFilesPo getFilesPo(ReportFilesDo reportFilesDo);
 }

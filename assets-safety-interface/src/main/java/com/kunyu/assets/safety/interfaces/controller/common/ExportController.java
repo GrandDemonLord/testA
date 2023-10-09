@@ -148,7 +148,6 @@ public class ExportController {
         } else {
             asAssetsDos.addAll(pageInfo.getList());
         }
-
         // 导出excel
         exportExcel(response, asAssetsDos);
     }
