@@ -2,7 +2,7 @@
  * Copyright (c) Shanghai Qitong Information Technology Co., LTD 2023-2099
  */
 
-package com.kunyu.assets.safety.infrastructure;
+package com.kunyu.assets.safety.common.enums.util;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

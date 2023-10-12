@@ -4,6 +4,9 @@
 
 package com.kunyu.assets.safety.domain.model.legal;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.kunyu.common.models.BaseModel;
 import lombok.Data;
 
@@ -15,11 +18,16 @@ import java.util.List;
  * @TableName lm_corporate_governance
  */
 @Data
+@ExcelIgnoreUnannotated
 public class LmCorporateGovernanceDo extends BaseModel {
 
+    @ExcelProperty("企业制度id")
+    private Integer id;
     /**
      * 企业制度名称
      */
+    @ColumnWidth(20)
+    @ExcelProperty("企业制度名称")
     private String corporateGovernanceName;
 
     /**
@@ -30,6 +38,8 @@ public class LmCorporateGovernanceDo extends BaseModel {
     /**
      * 企业制度附件名称
      */
+    @ColumnWidth(20)
+    @ExcelProperty("企业制度附件")
     private String corporateGovernanceAttachmentName;
 
     /**
@@ -43,13 +53,28 @@ public class LmCorporateGovernanceDo extends BaseModel {
     private List<String> lawNameList;
 
     /**
+     * 依据法律名称 (导出Excel时使用)
+     */
+    @ColumnWidth(20)
+    @ExcelProperty("依据法律名称")
+    private String lawNames;
+
+    /**
      * 发布日期
      */
+    @ExcelProperty("发布日期")
+    @ColumnWidth(20)
     private Date releaseDate;
 
     /**
      * 实施日期
      */
+    @ColumnWidth(20)
+    @ExcelProperty("实施日期")
     private Date implementationDate;
 
+    // 在数据转换时将法律名称连接为一个字符串
+    public void setLawNameList(List<String> lawNameList) {
+        this.lawNames = String.join(", ", lawNameList); // 使用逗号分隔法律名称
+    }
 }

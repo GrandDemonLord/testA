@@ -51,4 +51,9 @@ public class LmCorporateGovernanceSearchDo {
      */
     private Date implementationDate;
 
+    /**
+     * ids
+     */
+    private List<Integer> ids;
+
 }

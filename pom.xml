@@ -36,6 +36,7 @@
         <seata.version>1.7.0</seata.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <easyexcel.version>3.3.2</easyexcel.version>
+        <openfeign.version>2.2.9.RELEASE</openfeign.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +64,11 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${openfeign.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

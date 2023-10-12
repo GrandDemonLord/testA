@@ -15,6 +15,7 @@ public enum ApproveStatusEnum {
     SOURCEAPPROVED("source_approved", "审批通过"),
     SOURCEREJECTION("source_rejection", "审批驳回"),
     SOURCEIGNORE("source_ignore", "审批忽略"),
+    SOURCEPROCESSED("source_processed", "待处置"),
 
     WORKORDERPENDING("workOrder_pending", "待审批"),
     WORKORDERAPPROVED("workOrder_approved", "审批通过"),

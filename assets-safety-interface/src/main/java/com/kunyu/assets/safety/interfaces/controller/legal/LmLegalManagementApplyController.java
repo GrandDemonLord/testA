@@ -26,7 +26,6 @@ import com.kunyu.common.result.ApiResponse;
 import com.kunyu.common.util.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -196,24 +195,82 @@ public class LmLegalManagementApplyController {
         return ApiResponse.success(legalManagementApplication.updateCorporateGovernance(lmCorporateGovernanceDo));
     }
 
-    // todo 删除使用post searchdo
-
     /**
-     * @param ids
+     * @param searchDto
      * @return Boolean
      * @description 删除企业制度
      * @author poet_wei
      * @date 2023/9/28
      */
-    @RequestMapping(value = "/batchDeleteCorporateGovernance/{ids}", method = RequestMethod.POST)
-    public ApiResponse<Boolean> batchDeleteCorporateGovernance(@RequestBody List<Integer> ids) {
+    @RequestMapping(value = "/batchDeleteGovernance", method = RequestMethod.POST)
+    public ApiResponse<Boolean> batchDeleteCorporateGovernance(@RequestBody LmCorporateGovernanceSearchDto searchDto) {
         UserInfo userInfo = checkBranchPermissions();
+        LmCorporateGovernanceSearchDo searchDo = LmDtoDoConverter.INSTANCE.getLmCorporateGovernanceSearchDo(searchDto);
         // 检查参数是否为空或无效
-        if(CollectionUtils.isEmpty(ids)){
+        if (ObjectUtils.isEmpty(searchDto)) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "未选择所删除的企业制度。");
         }
-        return ApiResponse.success(legalManagementApplication.batchDeleteCorporateGovernance(ids,userInfo.getUserId()));
+        return ApiResponse.success(legalManagementApplication.batchDeleteCorporateGovernance(searchDo, userInfo.getUserId()));
     }
+
+    /**
+     * @param
+     * @return LmLegalManagementDo
+     * @description 查询代办任务
+     * @author poet_wei
+     * @date 2023/9/15
+     */
+    @RequestMapping(path = "/selectTaskQuery", method = RequestMethod.POST)
+    public ApiResponse<PageInfo<LmLegalManagementDo>> selectTaskQuery(@RequestBody LmLegalManagementSearchDto searchDto,
+                                                                      @RequestParam(defaultValue = "1") int pageNum,
+                                                                      @RequestParam(defaultValue = "10") int pageSize) {
+        if (pageSize > 200) {
+            throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "每页条数不能超过200。");
+        }
+        LmLegalManagementSearchDo searchDo = LmDtoDoConverter.INSTANCE.getLmLegalManagementSearchDo(searchDto);
+        searchDo.setRoleCode(ThreadLocalUtil.getUserInfo().getRoleCode());
+        searchDo.setProcessedId(ThreadLocalUtil.getUserInfo().getUserId());
+        searchDo.setUnitId(ThreadLocalUtil.getUserInfo().getUnitId());
+        return ApiResponse.success(legalManagementApplication.selectTaskQuery(searchDo, pageNum, pageSize));
+    }
+
+    /**
+     * @param id 法律法规工单id
+     * @return Boolean
+     * @description 法律法规工单开始
+     * @author poet_wei
+     * @date 2023/10/11
+     */
+    @RequestMapping(path = "/legalReportStart/{id}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> legalReportStart(@PathVariable("id") Integer id) {
+        return ApiResponse.success(legalManagementApplication.legalReportStart(id, ThreadLocalUtil.getUserInfo().getUserId()));
+    }
+
+
+    /**
+     * @param id 法律法规工单id
+     * @return Boolean
+     * @description 法律法规工单结束
+     * @author poet_wei
+     * @date 2023/10/11
+     */
+    @RequestMapping(path = "/legalReportEnd/{id}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> legalReportEnd(@PathVariable("id") Integer id) {
+        return ApiResponse.success(legalManagementApplication.lagalReortEnd(id, ThreadLocalUtil.getUserInfo().getUserId()));
+    }
+
+    /**
+     * @param id 法律法规工单id
+     * @return Boolean
+     * @description 法律法规工单 最新状态
+     * @author poet_wei
+     * @date 2023/10/11
+     */
+    @RequestMapping(path = "/legalUpdateLatest/{id}/{latest}", method = RequestMethod.GET)
+    public ApiResponse<Boolean> legalUpdateLatest(@PathVariable("id") Integer id, @PathVariable("latest") Boolean latest) {
+        return ApiResponse.success(legalManagementApplication.legalUpdateLatest(id, latest, ThreadLocalUtil.getUserInfo().getUserId()));
+    }
+
 
     // 权限校验是否是总厂管理员
     private static UserInfo checkPermissions() {

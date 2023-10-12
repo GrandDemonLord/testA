@@ -20,15 +20,41 @@ public class LmLegalManagementSearchDto {
      * 法律法规id
      */
     private Integer id;
+
     /**
      * 法律法规名称
      */
     private String lawName;
 
     /**
+     * 用户id
+     */
+    private String userId;
+
+    /**
+     * 用户名
+     */
+    private String userName;
+
+    /**
      * 年度
      */
     private String annual;
+
+    /**
+     * 单位id
+     */
+    private String unitId;
+
+    /**
+     * 角色id
+     */
+    private String roleCode;
+
+    /**
+     * 处置人id
+     */
+    private String processedId;
 
     /**
      * 检查时间

@@ -11,7 +11,7 @@ import com.kunyu.assets.safety.common.enums.common.ApproveStatusEnum;
 import com.kunyu.assets.safety.common.enums.common.FormDataTypeEnum;
 import com.kunyu.assets.safety.common.enums.common.UserDo;
 import com.kunyu.assets.safety.common.enums.loophole.InstanceNodeOfLoopholeEnum;
-import com.kunyu.assets.safety.common.enums.loophole.LoopholeReportStatusEnum;
+import com.kunyu.assets.safety.common.enums.common.ReportStatusEnum;
 import com.kunyu.assets.safety.domain.feignclients.SecurityClient;
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistoryDo;
 import com.kunyu.assets.safety.domain.model.common.ApApproveHistorySearchDo;
@@ -158,7 +158,7 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "非法操作。");
         }
         // 封装漏洞工单信息
-        loLoopholeDo.setReportStatus(LoopholeReportStatusEnum.NOTSTARTED.getCode());
+        loLoopholeDo.setReportStatus(ReportStatusEnum.NOTSTARTED.getCode());
         loLoopholeDo.setApproveStatus(ApproveStatusEnum.VULNERABILITYORDERPROCESSED.getCode());
         loLoopholeDo.setFormdataTypeCode(FormDataTypeEnum.LOTASKWORKORDERAPPROVAL.getCode());
         loLoopholeDo.setFormdataTypeName(FormDataTypeEnum.LOTASKWORKORDERAPPROVAL.getName());
@@ -234,11 +234,10 @@ public class LoopholeDomain {
         // 校验处置人是否对应
         verifyLoopholeProcessed(loLoopholeDo, userId);
         // 报告是否是待开始状态
-        if (!LoopholeReportStatusEnum.NOTSTARTED.getCode().equals(loLoopholeDo.getReportStatus())) {
+        if (!ReportStatusEnum.NOTSTARTED.getCode().equals(loLoopholeDo.getReportStatus())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "报告状态有误。");
         }
-        String reportStatus = LoopholeReportStatusEnum.UPLOADING.getCode();
-        String approveStatus = ApproveStatusEnum.VULNERABILITYORDERPENDING.getCode();
+        String reportStatus = ReportStatusEnum.UPLOADING.getCode();
         return iLoLoopholeRepository.updateLoopholeReportStartById(id, reportStatus, userId);
     }
 
@@ -261,7 +260,7 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "漏洞处理报告暂未上传，无法结束。");
         }
         // 报告是否是待结束状态
-        if (!LoopholeReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
+        if (!ReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "报告状态有误。");
         }
         // 更新历史记录表--待处置数据
@@ -273,7 +272,7 @@ public class LoopholeDomain {
         historyDo.setApproveResult(ApproveResultEnum.APPROVERD.getName());
         iApApproveHistoryRepository.updateHistoryDo(historyDo);
         // 漏洞报告结束
-        boolean approveStatus = iLoLoopholeRepository.loopholeReportEndById(id, LoopholeReportStatusEnum.END.getCode(), ApproveStatusEnum.VULNERABILITYORDERPENDING.getCode(), userId);
+        boolean approveStatus = iLoLoopholeRepository.loopholeReportEndById(id, ReportStatusEnum.END.getCode(), ApproveStatusEnum.VULNERABILITYORDERPENDING.getCode(), userId);
         // 插入历史记录表--待审批数据
         List<ApApproveHistoryDo> historyDos = new ArrayList<>();
         Date date = new Date();
@@ -365,7 +364,7 @@ public class LoopholeDomain {
         loLoopholeDo.setApproveUserId(userId);
         loLoopholeDo.setApproveUserName(userName);
         loLoopholeDo.setUpdateBy(userId);
-        loLoopholeDo.setReportStatus(LoopholeReportStatusEnum.NOTSTARTED.getCode());
+        loLoopholeDo.setReportStatus(ReportStatusEnum.NOTSTARTED.getCode());
         loLoopholeDo.setApproveStatus(ApproveStatusEnum.VULNERABILITYORDERREJECTION.getCode());
         boolean rejectionStatus = iLoLoopholeRepository.rejection(loLoopholeDo);
         // 审批历史表
@@ -451,7 +450,7 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "非处置人不能操作漏洞报告。");
         }
         // 此时漏洞工单是否处于上传阶段
-        if (!LoopholeReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
+        if (!ReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "此时不处于漏洞报告上传阶段。");
         }
     }
@@ -469,7 +468,7 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "非处置人不能操作漏洞报告。");
         }
         // 此时漏洞工单是否处于上传阶段
-        if (!LoopholeReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
+        if (!ReportStatusEnum.UPLOADING.getCode().equals(loLoopholeDo.getReportStatus())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "此时不处于漏洞报告上传阶段。");
         }
         // 校验漏洞报告是否已经上传
@@ -522,8 +521,8 @@ public class LoopholeDomain {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "非法操作。");
         }
     }
-    // 校验处置人
 
+    // 校验处置人
     private void verifyLoopholeProcessed(LoLoopholeDo loLoopholeDo, String userId) {
         if (!userId.equals(loLoopholeDo.getProcessedId())) {
             throw new PlatformException(HttpStatus.BAD_REQUEST.value(), "处置人有误。");
